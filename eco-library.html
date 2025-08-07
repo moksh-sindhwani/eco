@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco Library - EcoFootprint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #2ecc71;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #cccccc;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Search and Filter Styles */
+        .search-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            min-width: 300px;
+        }
+
+        .search-input::placeholder {
+            color: #cccccc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2ecc71;
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-color: #2ecc71;
+            transform: translateY(-2px);
+        }
+
+        /* Library Grid Styles */
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .library-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .library-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-category {
+            color: #2ecc71;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .card-description {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #2ecc71;
+            border: 2px solid #2ecc71;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2ecc71;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-size: 1rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .featured-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .featured-description {
+            font-size: 1.1rem;
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            position: relative;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow-y: auto;
+            color: #333;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .modal-text {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+
+            .library-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .library-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🌱 EcoFootprint</a>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+                <li><a href="carbon-tracker.html" class="nav-link">📊 Carbon Tracker</a></li>
+                <li><a href="society-registration.html" class="nav-link">🏢 Society Registration</a></li>
+                <li><a href="eco-dashboard.html" class="nav-link">📈 Eco Dashboard</a></li>
+                <li><a href="eco-library.html" class="nav-link active">📚 Eco Library</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 Eco Library</h1>
+            <p>Discover comprehensive resources, tips, and knowledge to accelerate your journey toward sustainable living. From beginner guides to advanced eco-solutions, find everything you need to make a positive environmental impact.</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalResources">150+</div>
+                    <div class="stat-label">Resources Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="categoriesCount">12</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalViews">25,000+</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="weeklyUpdates">5</div>
+                    <div class="stat-label">Weekly Updates</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Article -->
+        <div class="featured-article">
+            <h2 class="featured-title">🌟 Featured: Zero Waste Living - A Complete Guide</h2>
+            <p class="featured-description">Discover how to reduce your household waste by 90% with our comprehensive zero waste guide. Learn practical tips, sustainable alternatives, and step-by-step strategies to transform your lifestyle while saving money and protecting the environment.</p>
+            <button class="action-btn btn-primary" onclick="openModal('zeroWasteGuide')">Read Full Guide</button>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search for eco tips, guides, solutions...">
+            </div>
+            <div class="filter-container">
+                <button class="filter-btn active" data-category="all">All Resources</button>
+                <button class="filter-btn" data-category="energy">🔋 Energy</button>
+                <button class="filter-btn" data-category="waste">♻️ Waste</button>
+                <button class="filter-btn" data-category="water">💧 Water</button>
+                <button class="filter-btn" data-category="transport">🚗 Transport</button>
+                <button class="filter-btn" data-category="food">🥬 Food</button>
+                <button class="filter-btn" data-category="home">🏠 Home</button>
+            </div>
+        </div>
+
+        <!-- Library Grid -->
+        <div class="library-grid" id="libraryGrid">
+            <!-- Cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="resourceModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-text" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Library Resources Data
+        const libraryResources = [
+            {
+                id: 'solarPower',
+                category: 'energy',
+                icon: '☀️',
+                title: 'Solar Power for Homes',
+                description: 'Complete guide to installing and optimizing solar panels for maximum energy savings and environmental impact.',
+                tags: ['Solar', 'Renewable', 'Savings'],
+                content: `
+                    <h3>Getting Started with Solar Power</h3>
+                    <p>Solar power is one of the most effective ways to reduce your carbon footprint and energy bills. Here's everything you need to know:</p>
+                    
+                    <h4>Benefits of Solar Power:</h4>
+                    <ul>
+                        <li>Reduce electricity bills by 50-90%</li>
+                        <li>Increase property value by 3-4%</li>
+                        <li>Generate clean, renewable energy</li>
+                        <li>Low maintenance requirements</li>
+                        <li>Government incentives and tax credits</li>
+                    </ul>
+                    
+                    <h4>Types of Solar Systems:</h4>
+                    <p><strong>Grid-Tie Systems:</strong> Connected to the electrical grid, allowing you to sell excess power back to utilities.</p>
+                    <p><strong>Off-Grid Systems:</strong> Independent systems with battery storage for complete energy independence.</p>
+                    <p><strong>Hybrid Systems:</strong> Combination of grid-tie and battery backup for maximum flexibility.</p>
+                    
+                    <h4>Installation Process:</h4>
+                    <ol>
+                        <li>Energy audit and consumption analysis</li>
+                        <li>Site assessment and design</li>
+                        <li>Permits and approvals</li>
+                        <li>Professional installation</li>
+                        <li>System commissioning and monitoring</li>
+                    </ol>
+                    
+                    <h4>Cost and ROI:</h4>
+                    <p>Average residential solar installation costs $15,000-$25,000 before incentives. With federal tax credits and state rebates, payback period is typically 6-10 years, with 25+ year system lifespan.</p>
+                `
+            },
+            {
+                id: 'rainwaterHarvesting',
+                category: 'water',
+                icon: '🌧️',
+                title: 'Rainwater Harvesting Systems',
+                description: 'Learn how to collect, store, and use rainwater to reduce water bills and support sustainable water management.',
+                tags: ['Water Conservation', 'Sustainability', 'DIY'],
+                content: `
+                    <h3>Rainwater Harvesting: A Sustainable Solution</h3>
+                    <p>Rainwater harvesting is an eco-friendly method to collect and store rainwater for various uses, reducing dependence on municipal water supply.</p>
+                    
+                    <h4>Benefits:</h4>
+                    <ul>
+                        <li>Reduce water bills by 30-50%</li>
+                        <li>Decrease stormwater runoff</li>
+                        <li>Provide water during shortages</li>
+                        <li>Improve soil and plant health</li>
+                        <li>Reduce erosion and flooding</li>
+                    </ul>
+                    
+                    <h4>System Components:</h4>
+                    <p><strong>Catchment Area:</strong> Rooftops, driveways, or other surfaces to collect rainwater.</p>
+                    <p><strong>Gutters and Downspouts:</strong> Channel water from catchment areas to storage.</p>
+                    <p><strong>First Flush Diverter:</strong> Removes initial contaminated water from each rainfall.</p>
+                    <p><strong>Storage Tanks:</strong> Food-grade containers or cisterns for water storage.</p>
+                    <p><strong>Distribution System:</strong> Pumps and piping for water usage.</p>
+                    
+                    <h4>Installation Steps:</h4>
+                    <ol>
+                        <li>Calculate collection potential (roof area × rainfall × 0.623)</li>
+                        <li>Install gutters and downspouts if needed</li>
+                        <li>Set up first flush diverter</li>
+                        <li>Install storage tanks with overflow</li>
+                        <li>Connect distribution system</li>
+                        <li>Add filtration for potable uses</li>
+                    </ol>
+                    
+                    <h4>Maintenance:</h4>
+                    <p>Regular gutter cleaning, tank inspection, and filter replacement ensure system efficiency and water quality.</p>
+                `
+            },
+            {
+                id: 'composting',
+                category: 'waste',
+                icon: '🌱',
+                title: 'Home Composting Guide',
+                description: 'Transform kitchen scraps and yard waste into nutrient-rich compost for your garden while reducing landfill waste.',
+                tags: ['Composting', 'Gardening', 'Waste Reduction'],
+                content: `
+                    <h3>Complete Home Composting Guide</h3>
+                    <p>Composting turns organic waste into valuable soil amendment, reducing waste and creating nutrient-rich material for plants.</p>
+                    
+                    <h4>What to Compost (Greens - Nitrogen Rich):</h4>
+                    <ul>
+                        <li>Kitchen scraps: fruit and vegetable peels, coffee grounds, tea leaves</li>
+                        <li>Fresh grass clippings</li>
+                        <li>Fresh plant trimmings</li>
+                        <li>Eggshells (crushed)</li>
+                    </ul>
+                    
+                    <h4>What to Compost (Browns - Carbon Rich):</h4>
+                    <ul>
+                        <li>Dry leaves</li>
+                        <li>Shredded newspaper and cardboard</li>
+                        <li>Sawdust and wood chips</li>
+                        <li>Straw and hay</li>
+                    </ul>
+                    
+                    <h4>Composting Methods:</h4>
+                    <p><strong>Bin Composting:</strong> Use a commercial bin or build your own with wire mesh or wood.</p>
+                    <p><strong>Tumbler Composting:</strong> Enclosed rotating container for faster decomposition.</p>
+                    <p><strong>Vermicomposting:</strong> Using worms to break down organic matter indoors.</p>
+                    <p><strong>Pile Composting:</strong> Simple heap method for larger quantities.</p>
+                    
+                    <h4>The Composting Process:</h4>
+                    <ol>
+                        <li>Layer greens and browns in 1:3 ratio</li>
+                        <li>Keep pile moist like a wrung-out sponge</li>
+                        <li>Turn pile every 2-3 weeks for aeration</li>
+                        <li>Monitor temperature (130-160°F for active composting)</li>
+                        <li>Harvest finished compost in 3-6 months</li>
+                    </ol>
+                    
+                    <h4>Troubleshooting:</h4>
+                    <p><strong>Pile smells:</strong> Add more browns, turn more frequently</p>
+                    <p><strong>Pile not heating:</strong> Add greens, check moisture, ensure adequate size</p>
+                    <p><strong>Slow decomposition:</strong> Chop materials smaller, maintain proper moisture</p>
+                `
+            },
+            {
+                id: 'electricVehicles',
+                category: 'transport',
+                icon: '🔌',
+                title: 'Electric Vehicle Transition',
+                description: 'Everything you need to know about switching to electric vehicles, including costs, benefits, and charging infrastructure.',
+                tags: ['EV', 'Transport', 'Clean Energy'],
+                content: `
+                    <h3>Your Guide to Electric Vehicles</h3>
+                    <p>Electric vehicles represent the future of transportation, offering environmental benefits and long-term cost savings.</p>
+                    
+                    <h4>Environmental Benefits:</h4>
+                    <ul>
+                        <li>Zero direct emissions</li>
+                        <li>Reduced air pollution in cities</li>
+                        <li>Lower lifecycle carbon footprint</li>
+                        <li>Decreased noise pollution</li>
+                        <li>Supports renewable energy grid</li>
+                    </ul>
+                    
+                    <h4>Financial Benefits:</h4>
+                    <ul>
+                        <li>Lower fuel costs (electricity vs gasoline)</li>
+                        <li>Reduced maintenance requirements</li>
+                        <li>Government incentives and rebates</li>
+                        <li>HOV lane access in many areas</li>
+                        <li>Potential free parking and charging</li>
+                    </ul>
+                    
+                    <h4>Types of Electric Vehicles:</h4>
+                    <p><strong>BEV (Battery Electric):</strong> Fully electric, powered only by batteries</p>
+                    <p><strong>PHEV (Plug-in Hybrid):</strong> Electric motor with gasoline backup engine</p>
+                    <p><strong>HEV (Hybrid):</strong> Cannot plug in, charges through regenerative braking</p>
+                    
+                    <h4>Charging Infrastructure:</h4>
+                    <p><strong>Level 1:</strong> Standard 120V outlet, 2-5 miles per hour of charge</p>
+                    <p><strong>Level 2:</strong> 240V outlet, 10-60 miles per hour of charge</p>
+                    <p><strong>DC Fast Charging:</strong> Public stations, 60-200 miles in 20-30 minutes</p>
+                    
+                    <h4>Choosing the Right EV:</h4>
+                    <ol>
+                        <li>Assess daily driving needs and range requirements</li>
+                        <li>Evaluate charging options at home and work</li>
+                        <li>Compare total cost of ownership</li>
+                        <li>Research available incentives</li>
+                        <li>Test drive multiple models</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'organicGardening',
+                category: 'food',
+                icon: '🥬',
+                title: 'Organic Gardening Basics',
+                description: 'Grow your own healthy, chemical-free food while supporting biodiversity and soil health in your backyard.',
+                tags: ['Organic', 'Gardening', 'Food Security'],
+                content: `
+                    <h3>Starting Your Organic Garden</h3>
+                    <p>Organic gardening produces healthy food while protecting the environment and promoting biodiversity.</p>
+                    
+                    <h4>Principles of Organic Gardening:</h4>
+                    <ul>
+                        <li>Build healthy soil with organic matter</li>
+                        <li>Use natural pest control methods</li>
+                        <li>Promote biodiversity and beneficial insects</li>
+                        <li>Conserve water and natural resources</li>
+                        <li>Avoid synthetic chemicals and pesticides</li>
+                    </ul>
+                    
+                    <h4>Soil Preparation:</h4>
+                    <p><strong>Test Your Soil:</strong> Check pH levels and nutrient content</p>
+                    <p><strong>Add Organic Matter:</strong> Compost, aged manure, or leaf mold</p>
+                    <p><strong>Improve Drainage:</strong> Add organic matter or create raised beds</p>
+                    <p><strong>Mulching:</strong> Retain moisture and suppress weeds naturally</p>
+                    
+                    <h4>Natural Pest Control:</h4>
+                    <ul>
+                        <li>Companion planting (marigolds with tomatoes)</li>
+                        <li>Beneficial insects (ladybugs, lacewings)</li>
+                        <li>Physical barriers (row covers, copper tape)</li>
+                        <li>Organic sprays (neem oil, soap solution)</li>
+                        <li>Crop rotation to break pest cycles</li>
+                    </ul>
+                    
+                    <h4>Easy Crops for Beginners:</h4>
+                    <p><strong>Vegetables:</strong> Lettuce, radishes, beans, tomatoes, carrots</p>
+                    <p><strong>Herbs:</strong> Basil, parsley, chives, oregano, thyme</p>
+                    <p><strong>Fruits:</strong> Strawberries, blueberries (in containers)</p>
+                    
+                    <h4>Seasonal Garden Planning:</h4>
+                    <ol>
+                        <li>Spring: Prepare beds, plant cool-season crops</li>
+                        <li>Summer: Plant warm-season crops, maintain watering</li>
+                        <li>Fall: Harvest, plant fall crops, collect seeds</li>
+                        <li>Winter: Plan next year, maintain compost, prepare tools</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'energyEfficiency',
+                category: 'home',
+                icon: '🏠',
+                title: 'Home Energy Efficiency',
+                description: 'Reduce energy consumption and costs with practical home improvements and smart energy management strategies.',
+                tags: ['Energy Efficiency', 'Home Improvement', 'Cost Savings'],
+                content: `
+                    <h3>Maximizing Home Energy Efficiency</h3>
+                    <p>Improving home energy efficiency reduces utility bills, increases comfort, and decreases environmental impact.</p>
+                    
+                    <h4>Low-Cost Improvements:</h4>
+                    <ul>
+                        <li>Weather stripping around doors and windows</li>
+                        <li>Caulking gaps and cracks</li>
+                        <li>LED light bulb replacement</li>
+                        <li>Programmable thermostat installation</li>
+                        <li>Draft stoppers for unused rooms</li>
+                    </ul>
+                    
+                    <h4>Medium-Cost Upgrades:</h4>
+                    <ul>
+                        <li>Window film or cellular shades</li>
+                        <li>Ceiling fan installation</li>
+                        <li>Smart power strips</li>
+                        <li>Water heater insulation blanket</li>
+                        <li>Energy-efficient showerheads and faucets</li>
+                    </ul>
+                    
+                    <h4>Major Investments:</h4>
+                    <ul>
+                        <li>Insulation upgrades (attic, walls, basement)</li>
+                        <li>High-efficiency HVAC systems</li>
+                        <li>Energy-efficient windows and doors</li>
+                        <li>Smart home automation systems</li>
+                        <li>Heat pump water heaters</li>
+                    </ul>
+                    
+                    <h4>Heating and Cooling Optimization:</h4>
+                    <p><strong>Temperature Settings:</strong> 68°F winter, 78°F summer for optimal efficiency</p>
+                    <p><strong>Regular Maintenance:</strong> Change filters monthly, annual HVAC tune-ups</p>
+                    <p><strong>Zoning:</strong> Heat/cool only occupied areas</p>
+                    <p><strong>Natural Methods:</strong> Use fans, window coverings, and ventilation</p>
+                    
+                    <h4>Appliance Efficiency:</h4>
+                    <ol>
+                        <li>Look for ENERGY STAR ratings when replacing appliances</li>
+                        <li>Unplug electronics when not in use</li>
+                        <li>Use cold water for washing clothes</li>
+                        <li>Air dry dishes and clothes when possible</li>
+                        <li>Keep refrigerator and freezer full but not overcrowded</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'plasticAlternatives',
+                category: 'waste',
+                icon: '🌿',
+                title: 'Plastic-Free Alternatives',
+                description: 'Discover sustainable alternatives to single-use plastics for a healthier home and environment.',
+                tags: ['Plastic-Free', 'Alternatives', 'Sustainability'],
+                content: `
+                    <h3>Transitioning to Plastic-Free Living</h3>
+                    <p>Reducing plastic use protects marine life, reduces pollution, and often saves money through reusable alternatives.</p>
+                    
+                    <h4>Kitchen Alternatives:</h4>
+                    <ul>
+                        <li>Glass or stainless steel food containers</li>
+                        <li>Beeswax wraps instead of plastic wrap</li>
+                        <li>Reusable silicone bags</li>
+                        <li>Bamboo or wooden utensils</li>
+                        <li>Glass water bottles and mason jars</li>
+                    </ul>
+                    
+                    <h4>Personal Care Swaps:</h4>
+                    <ul>
+                        <li>Bamboo toothbrushes</li>
+                        <li>Shampoo and conditioner bars</li>
+                        <li>Safety razors with replaceable blades</li>
+                        <li>Menstrual cups or reusable pads</li>
+                        <li>Refillable deodorant containers</li>
+                    </ul>
+                    
+                    <h4>Shopping Alternatives:</h4>
+                    <ul>
+                        <li>Canvas or jute shopping bags</li>
+                        <li>Mesh produce bags</li>
+                        <li>Glass jars for bulk purchases</li>
+                        <li>Reusable coffee cups</li>
+                        <li>Stainless steel straws</li>
+                    </ul>
+                    
+                    <h4>DIY Plastic-Free Solutions:</h4>
+                    <p><strong>Beeswax Wraps:</strong> Cotton fabric + beeswax + pine resin + jojoba oil</p>
+                    <p><strong>All-Purpose Cleaner:</strong> White vinegar + water + essential oils</p>
+                    <p><strong>Dish Soap:</strong> Castile soap + washing soda + essential oils</p>
+                    
+                    <h4>Gradual Transition Strategy:</h4>
+                    <ol>
+                        <li>Start with one category (kitchen, bathroom, etc.)</li>
+                        <li>Replace items as they wear out</li>
+                        <li>Focus on most-used items first</li>
+                        <li>Find local refill stations and bulk stores</li>
+                        <li>Share tips with family and friends</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'sustainableTransport',
+                category: 'transport',
+                icon: '🚲',
+                title: 'Sustainable Transportation',
+                description: 'Explore eco-friendly transportation options including cycling, public transit, and ride-sharing strategies.',
+                tags: ['Cycling', 'Public Transit', 'Carbon Reduction'],
+                content: `
+                    <h3>Sustainable Transportation Options</h3>
+                    <p>Transportation accounts for 29% of greenhouse gas emissions. Choosing sustainable options significantly reduces your carbon footprint.</p>
+                    
+                    <h4>Cycling Benefits:</h4>
+                    <ul>
+                        <li>Zero emissions for short to medium trips</li>
+                        <li>Improved physical fitness and health</li>
+                        <li>Cost savings on fuel and parking</li>
+                        <li>Reduced traffic congestion</li>
+                        <li>Mental health benefits from outdoor activity</li>
+                    </ul>
+                    
+                    <h4>Cycling Safety and Infrastructure:</h4>
+                    <p><strong>Safety Gear:</strong> Helmet, reflective clothing, lights, bell</p>
+                    <p><strong>Route Planning:</strong> Use bike lanes, quiet streets, bike path maps</p>
+                    <p><strong>Bike Maintenance:</strong> Regular tune-ups, tire pressure, chain lubrication</p>
+                    <p><strong>Weather Preparation:</strong> Appropriate clothing, fenders, storage</p>
+                    
+                    <h4>Public Transportation:</h4>
+                    <ul>
+                        <li>Buses: Most accessible option in urban areas</li>
+                        <li>Trains/Subways: High capacity, efficient for longer distances</li>
+                        <li>Light Rail: Modern, clean urban transit</li>
+                        <li>Ride-sharing: Reduces individual car ownership needs</li>
+                        <li>Park-and-Ride: Combine driving with public transit</li>
+                    </ul>
+                    
+                    <h4>Alternative Transportation Models:</h4>
+                    <p><strong>Car Sharing:</strong> Access vehicles when needed without ownership</p>
+                    <p><strong>Bike Sharing:</strong> Short-term bicycle rentals in urban areas</p>
+                    <p><strong>Carpooling:</strong> Share rides with neighbors and colleagues</p>
+                    <p><strong>Walking:</strong> Healthiest option for trips under 1 mile</p>
+                    
+                    <h4>Creating a Transportation Plan:</h4>
+                    <ol>
+                        <li>Map your regular destinations and distances</li>
+                        <li>Identify sustainable options for each trip type</li>
+                        <li>Start with easiest substitutions</li>
+                        <li>Combine trip purposes to reduce overall travel</li>
+                        <li>Advocate for better infrastructure in your community</li>
+                    </ol>
+                `
+            }
+        ];
+
+        // Initialize the library
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            displayResources();
+            setupEventListeners();
+            updateStats();
+        });
+
+        // Display resources based on current filter and search
+        function displayResources() {
+            const grid = document.getElementById('libraryGrid');
+            
+            let filteredResources = libraryResources.filter(resource => {
+                const matchesCategory = currentFilter === 'all' || resource.category === currentFilter;
+                const matchesSearch = searchTerm === '' || 
+                    resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    resource.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    resource.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+                
+                return matchesCategory && matchesSearch;
+            });
+
+            grid.innerHTML = filteredResources.map(resource => `
+                <div class="library-card" onclick="openModal('${resource.id}')">
+                    <div class="card-icon">${resource.icon}</div>
+                    <div class="card-category">${resource.category.toUpperCase()}</div>
+                    <h3 class="card-title">${resource.title}</h3>
+                    <p class="card-description">${resource.description}</p>
+                    <div class="card-tags">
+                        ${resource.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn btn-primary">Read More</button>
+                        <button class="action-btn btn-secondary">Share</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelector('.filter-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                    currentFilter = this.dataset.category;
+                    displayResources();
+                });
+            });
+
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                searchTerm = e.target.value;
+                displayResources();
+            });
+
+            // Modal close events
+            document.getElementById('resourceModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalResources').textContent = libraryResources.length + '+';
+            const categories = [...new Set(libraryResources.map(r => r.category))];
+            document.getElementById('categoriesCount').textContent = categories.length;
+        }
+
+        // Modal functions
+        function openModal(resourceId) {
+            const resource = libraryResources.find(r => r.id === resourceId) || getSpecialContent(resourceId);
+            if (!resource) return;
+
+            document.getElementById('modalTitle').textContent = resource.title || 'Zero Waste Living Guide';
+            document.getElementById('modalContent').innerHTML = resource.content || getZeroWasteContent();
+            document.getElementById('resourceModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('resourceModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Special content for featured article
+        function getSpecialContent(id) {
+            if (id === 'zeroWasteGuide') {
+                return {
+                    title: 'Zero Waste Living - Complete Guide',
+                    content: getZeroWasteContent()
+                };
+            }
+            return null;
+        }
+
+        function getZeroWasteContent() {
+            return `
+                <h3>Your Journey to Zero Waste Living</h3>
+                <p>Zero waste living is about minimizing the amount of waste you send to landfills by rethinking consumption, reusing items, and recycling properly.</p>
+                
+                <h4>The 5 R's of Zero Waste:</h4>
+                <ol>
+                    <li><strong>Refuse:</strong> Say no to things you don't need (single-use items, freebies)</li>
+                    <li><strong>Reduce:</strong> Minimize what you do need (digital receipts, smaller portions)</li>
+                    <li><strong>Reuse:</strong> Find new purposes for items before discarding</li>
+                    <li><strong>Recycle:</strong> Process items that cannot be refused, reduced, or reused</li>
+                    <li><strong>Rot:</strong> Compost organic waste to return nutrients to soil</li>
+                </ol>
+                
+                <h4>Getting Started - Week 1:</h4>
+                <ul>
+                    <li>Conduct a waste audit to see what you throw away</li>
+                    <li>Invest in reusable shopping bags and water bottle</li>
+                    <li>Start composting food scraps</li>
+                    <li>Switch to bar soap and shampoo</li>
+                    <li>Choose products with minimal packaging</li>
+                </ul>
+                
+                <h4>Zero Waste Kitchen:</h4>
+                <p><strong>Food Storage:</strong> Glass jars, containers, and beeswax wraps</p>
+                <p><strong>Shopping:</strong> Bring your own bags, containers for bulk items</p>
+                <p><strong>Cooking:</strong> Meal planning to reduce food waste</p>
+                <p><strong>Cleaning:</strong> DIY cleaners using vinegar, baking soda, castile soap</p>
+                
+                <h4>Zero Waste Bathroom:</h4>
+                <ul>
+                    <li>Bamboo toothbrush and refillable floss</li>
+                    <li>Safety razor with replaceable blades</li>
+                    <li>Shampoo and conditioner bars</li>
+                    <li>Reusable cotton rounds and towels</li>
+                    <li>Menstrual cups or reusable pads</li>
+                </ul>
+                
+                <h4>Common Challenges and Solutions:</h4>
+                <p><strong>Limited bulk stores:</strong> Start online, build community buying groups</p>
+                <p><strong>Higher upfront costs:</strong> Focus on most-used items first, DIY alternatives</p>
+                <p><strong>Family resistance:</strong> Lead by example, start small, educate on benefits</p>
+                <p><strong>Social situations:</strong> Bring your own containers, suggest zero-waste venues</p>
+                
+                <h4>Measuring Success:</h4>
+                <p>Track your progress by monitoring the amount of trash you generate weekly. Many zero waste families reduce their annual trash to fit in a mason jar!</p>
+                
+                <h4>Building Community:</h4>
+                <p>Connect with local zero waste groups, organize clothing swaps, share resources with neighbors, and advocate for better recycling and composting programs in your area.</p>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco Dashboard - EcoFootprint</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(39, 174, 96, 0.2);
+            color: #2ecc71;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .header-actions {
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 600px;
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+            white-space: nowrap;
+        }
+
+        .register-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-text {
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #27ae60;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .state-selector {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .state-select {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            margin: 0 1rem;
+        }
+
+        .state-select:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.3);
+        }
+
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .leaderboard-item.top-1 {
+            border-left-color: #f1c40f;
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.2), rgba(255, 215, 0, 0.1));
+        }
+
+        .leaderboard-item.top-2 {
+            border-left-color: #95a5a6;
+            background: linear-gradient(135deg, rgba(149, 165, 166, 0.2), rgba(192, 192, 192, 0.1));
+        }
+
+        .leaderboard-item.top-3 {
+            border-left-color: #e67e22;
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.2), rgba(205, 127, 50, 0.1));
+        }
+
+        .rank-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .rank-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .rank-number.gold { color: #f1c40f; }
+        .rank-number.silver { color: #95a5a6; }
+        .rank-number.bronze { color: #e67e22; }
+
+        .society-info {
+            flex: 1;
+        }
+
+        .society-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .new-badge {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+            animation: newBadgePulse 2s infinite;
+        }
+
+        @keyframes newBadgePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .society-details {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .eco-score {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+
+        .achievements {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.1));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid #27ae60;
+            margin-bottom: 2rem;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .achievement-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .achievement-card.unlocked {
+            border: 2px solid #f1c40f;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+        }
+
+        .achievement-card.locked {
+            opacity: 0.5;
+            border: 2px solid #95a5a6;
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-description {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-color: #27ae60;
+        }
+
+        .insights-section {
+            grid-column: span 2;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .insights-section {
+                grid-column: span 1;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        /* Animation for charts */
+        @keyframes chartAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .chart-container canvas {
+            animation: chartAppear 0.8s ease-out;
+        }
+
+        /* Notification Animation */
+        @keyframes slideInRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🌱 EcoFootprint</a>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+                <li><a href="carbon-tracker.html" class="nav-link">📊 Carbon Tracker</a></li>
+                <li><a href="society-registration.html" class="nav-link">🏢 Society Registration</a></li>
+                <li><a href="eco-dashboard.html" class="nav-link active">📈 Eco Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>📈 Eco Dashboard</h1>
+                    <p>Track, compete, and celebrate environmental achievements with societies across your state. See how your community ranks in the fight against climate change!</p>
+                </div>
+                <div class="header-actions">
+                    <button class="register-btn" onclick="window.open('society-registration.html', '_blank')">
+                        🏢 Register Your Society
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- State Selector -->
+        <div class="state-selector">
+            <label for="stateFilter" style="font-size: 1.2rem; margin-right: 1rem;">Select State:</label>
+            <select id="stateFilter" class="state-select">
+                <option value="all">All States</option>
+                <option value="maharashtra">Maharashtra</option>
+                <option value="karnataka">Karnataka</option>
+                <option value="delhi">Delhi</option>
+                <option value="gujarat">Gujarat</option>
+                <option value="rajasthan">Rajasthan</option>
+                <option value="tamil-nadu">Tamil Nadu</option>
+                <option value="uttar-pradesh">Uttar Pradesh</option>
+                <option value="west-bengal">West Bengal</option>
+            </select>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="changeView('overall')">🏆 Overall Ranking</button>
+            <button class="filter-tab" onclick="changeView('monthly')">📅 This Month</button>
+            <button class="filter-tab" onclick="changeView('carbon-reduction')">🌱 Carbon Reduction</button>
+            <button class="filter-tab" onclick="changeView('initiatives')">💡 Initiatives</button>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalSocieties">0</div>
+                <div class="stat-label">Registered Societies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalCarbon">0</div>
+                <div class="stat-label">Total CO₂ Reduced (kg)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgScore">0</div>
+                <div class="stat-label">Average Eco Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="topState">-</div>
+                <div class="stat-label">Leading State</div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Leaderboard Section -->
+            <div class="dashboard-section">
+                <h2 class="section-title">🏆 Society Leaderboard</h2>
+                <div class="leaderboard" id="leaderboard">
+                    <!-- Leaderboard items will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Analytics Charts -->
+            <div class="dashboard-section">
+                <h2 class="section-title">📊 State-wise Analytics</h2>
+                <div class="chart-container">
+                    <canvas id="stateChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="insights-section">
+            <h2 class="section-title">🔍 Environmental Insights</h2>
+            <div class="insights-grid">
+                <div class="chart-container">
+                    <canvas id="initiativesChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="carbonTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="achievements">
+            <h2 style="text-align: center; margin-bottom: 1rem; color: #ffffff;">🏅 Community Achievements</h2>
+            <div class="achievement-grid">
+                <div class="achievement-card unlocked">
+                    <div class="achievement-icon">🌟</div>
+                    <div class="achievement-title">First Steps</div>
+                    <div class="achievement-description">100+ societies registered</div>
+                </div>
+                <div class="achievement-card unlocked">
+                    <div class="achievement-icon">🌱</div>
+                    <div class="achievement-title">Green Warriors</div>
+                    <div class="achievement-description">10,000 kg CO₂ reduced collectively</div>
+                </div>
+                <div class="achievement-card locked">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-title">Eco Champions</div>
+                    <div class="achievement-description">50,000 kg CO₂ reduced collectively</div>
+                </div>
+                <div class="achievement-card locked">
+                    <div class="achievement-icon">🌍</div>
+                    <div class="achievement-title">Planet Savers</div>
+                    <div class="achievement-description">100,000 kg CO₂ reduced collectively</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        let societies = [
+            {
+                societyId: 'ECO123456',
+                societyName: 'Green Valley Apartments',
+                city: 'Mumbai',
+                state: 'maharashtra',
+                totalUnits: 150,
+                totalResidents: 600,
+                ecoScore: 95,
+                carbonReduced: 2400,
+                initiatives: ['waste-segregation', 'solar-panels', 'rainwater-harvesting', 'composting'],
+                registrationDate: '2024-01-15'
+            },
+            {
+                societyId: 'ECO789012',
+                societyName: 'Eco Heights Society',
+                city: 'Bangalore',
+                state: 'karnataka',
+                totalUnits: 200,
+                totalResidents: 800,
+                ecoScore: 92,
+                carbonReduced: 3200,
+                initiatives: ['led-lighting', 'waste-segregation', 'electric-vehicles', 'organic-garden'],
+                registrationDate: '2024-02-01'
+            },
+            {
+                societyId: 'ECO345678',
+                societyName: 'Sustainable Living Complex',
+                city: 'Delhi',
+                state: 'delhi',
+                totalUnits: 120,
+                totalResidents: 480,
+                ecoScore: 89,
+                carbonReduced: 1800,
+                initiatives: ['solar-panels', 'water-conservation', 'composting'],
+                registrationDate: '2024-01-28'
+            },
+            {
+                societyId: 'ECO901234',
+                societyName: 'Nature\'s Paradise',
+                city: 'Pune',
+                state: 'maharashtra',
+                totalUnits: 80,
+                totalResidents: 320,
+                ecoScore: 87,
+                carbonReduced: 1500,
+                initiatives: ['rainwater-harvesting', 'organic-garden', 'led-lighting'],
+                registrationDate: '2024-02-15'
+            },
+            {
+                societyId: 'ECO567890',
+                societyName: 'Green Earth Residency',
+                city: 'Chennai',
+                state: 'tamil-nadu',
+                totalUnits: 100,
+                totalResidents: 400,
+                ecoScore: 85,
+                carbonReduced: 1200,
+                initiatives: ['waste-segregation', 'solar-panels'],
+                registrationDate: '2024-03-01'
+            },
+            {
+                societyId: 'ECO234567',
+                societyName: 'Eco Friendly Towers',
+                city: 'Ahmedabad',
+                state: 'gujarat',
+                totalUnits: 180,
+                totalResidents: 720,
+                ecoScore: 83,
+                carbonReduced: 2100,
+                initiatives: ['led-lighting', 'water-conservation', 'composting'],
+                registrationDate: '2024-02-20'
+            }
+        ];
+
+        // Load societies from localStorage if available
+        const savedSocieties = JSON.parse(localStorage.getItem('registeredSocieties')) || [];
+        if (savedSocieties.length > 0) {
+            // Process and enhance saved societies data
+            savedSocieties.forEach(society => {
+                // Ensure compatibility with dashboard expectations
+                if (!society.name) {
+                    society.name = society.societyName || 'Unnamed Society';
+                }
+                
+                // Recalculate eco score if needed (using more comprehensive calculation)
+                if (!society.ecoScore || society.ecoScore === 0) {
+                    society.ecoScore = calculateEcoScore(society);
+                }
+                
+                // Generate carbon reduction if not exists
+                if (!society.carbonReduced) {
+                    society.carbonReduced = Math.floor(Math.random() * 3000) + 500;
+                }
+                
+                // Ensure initiatives field exists for compatibility
+                if (society.ecoInitiatives && !society.initiatives) {
+                    society.initiatives = society.ecoInitiatives;
+                }
+                
+                // Add timestamp for registration date if missing
+                if (!society.registrationDate) {
+                    society.registrationDate = new Date().toISOString();
+                }
+            });
+            
+            // Replace sample data with real registered societies
+            societies = [...societies, ...savedSocieties];
+        }
+
+        let currentView = 'overall';
+        let selectedState = 'all';
+
+        // Calculate eco score based on initiatives and other factors
+        function calculateEcoScore(society) {
+            // Return existing score if already calculated and reasonable
+            if (society.ecoScore && society.ecoScore > 20) {
+                return society.ecoScore;
+            }
+            
+            let score = 0;
+            
+            // Base score for registration
+            score += 25;
+            
+            // Points for eco initiatives
+            if (society.ecoInitiatives && society.ecoInitiatives.length > 0) {
+                score += society.ecoInitiatives.length * 10; // 10 points per initiative
+                
+                // Bonus for specific high-impact initiatives
+                const highImpactInitiatives = ['solar-panels', 'rainwater-harvesting', 'electric-vehicles', 'waste-segregation'];
+                const hasHighImpact = society.ecoInitiatives.some(init => highImpactInitiatives.includes(init));
+                if (hasHighImpact) score += 5;
+            }
+            
+            // Points based on society size (larger = more potential impact)
+            const units = parseInt(society.totalUnits) || 0;
+            if (units > 50) score += 8;
+            if (units > 100) score += 12;
+            if (units > 200) score += 18;
+            if (units > 500) score += 25;
+            
+            // Bonus for detailed goals and commitment
+            if (society.goals && society.goals.length > 50) {
+                score += 8; // Bonus for detailed planning
+            }
+            
+            // Time-based bonus (newer registrations get slight boost for momentum)
+            if (society.registrationDate) {
+                const regDate = new Date(society.registrationDate);
+                const daysSinceReg = (new Date() - regDate) / (1000 * 60 * 60 * 24);
+                if (daysSinceReg < 30) score += 5; // New registration bonus
+            }
+            
+            // Random factor for demonstration (simulate ongoing activities)
+            score += Math.floor(Math.random() * 15) + 5;
+            
+            return Math.min(score, 100);
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            loadLatestData(); // Load fresh data first
+            updateStats();
+            updateLeaderboard();
+            createCharts();
+            
+            // Set up auto-refresh every 30 seconds to check for new registrations
+            setInterval(() => {
+                loadLatestData();
+                updateStats();
+                updateLeaderboard();
+            }, 30000);
+        }
+
+        // Load latest data from localStorage
+        function loadLatestData() {
+            const savedSocieties = JSON.parse(localStorage.getItem('registeredSocieties')) || [];
+            const currentSavedCount = societies.filter(s => s.societyId && s.societyId.startsWith('ECO')).length;
+            
+            // Check if there are new registrations
+            if (savedSocieties.length > currentSavedCount) {
+                // Reload societies data
+                societies = societies.filter(s => !s.societyId || !s.societyId.startsWith('ECO')); // Remove old registered societies
+                
+                if (savedSocieties.length > 0) {
+                    // Process and enhance saved societies data
+                    savedSocieties.forEach(society => {
+                        // Ensure compatibility with dashboard expectations
+                        if (!society.name) {
+                            society.name = society.societyName || 'Unnamed Society';
+                        }
+                        
+                        // Recalculate eco score if needed
+                        if (!society.ecoScore || society.ecoScore === 0) {
+                            society.ecoScore = calculateEcoScore(society);
+                        }
+                        
+                        // Generate carbon reduction if not exists
+                        if (!society.carbonReduced) {
+                            society.carbonReduced = Math.floor(Math.random() * 3000) + 500;
+                        }
+                        
+                        // Ensure initiatives field exists for compatibility
+                        if (society.ecoInitiatives && !society.initiatives) {
+                            society.initiatives = society.ecoInitiatives;
+                        }
+                        
+                        // Add timestamp for registration date if missing
+                        if (!society.registrationDate) {
+                            society.registrationDate = new Date().toISOString();
+                        }
+                    });
+                    
+                    // Add fresh registered societies
+                    societies = [...societies, ...savedSocieties];
+                }
+                
+                // Show notification for new registrations
+                if (savedSocieties.length > currentSavedCount) {
+                    showNewRegistrationNotification();
+                }
+            }
+        }
+
+        // Show notification for new society registrations
+        function showNewRegistrationNotification() {
+            // Create and show a temporary notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #27ae60, #2ecc71);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 8px 32px rgba(39, 174, 96, 0.3);
+                z-index: 10000;
+                font-weight: 600;
+                animation: slideInRight 0.5s ease;
+            `;
+            notification.innerHTML = '🎉 New society registered! Dashboard updated.';
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Update statistics
+        function updateStats() {
+            const filteredSocieties = getFilteredSocieties();
+            
+            document.getElementById('totalSocieties').textContent = filteredSocieties.length;
+            
+            const totalCarbon = filteredSocieties.reduce((sum, s) => sum + s.carbonReduced, 0);
+            document.getElementById('totalCarbon').textContent = totalCarbon.toLocaleString();
+            
+            const avgScore = filteredSocieties.length > 0 ? 
+                Math.round(filteredSocieties.reduce((sum, s) => sum + s.ecoScore, 0) / filteredSocieties.length) : 0;
+            document.getElementById('avgScore').textContent = avgScore;
+            
+            // Find top state
+            const stateScores = {};
+            filteredSocieties.forEach(society => {
+                if (!stateScores[society.state]) {
+                    stateScores[society.state] = { total: 0, count: 0 };
+                }
+                stateScores[society.state].total += society.ecoScore;
+                stateScores[society.state].count++;
+            });
+            
+            let topState = 'None';
+            let topAvg = 0;
+            for (const [state, data] of Object.entries(stateScores)) {
+                const avg = data.total / data.count;
+                if (avg > topAvg) {
+                    topAvg = avg;
+                    topState = state.charAt(0).toUpperCase() + state.slice(1).replace('-', ' ');
+                }
+            }
+            document.getElementById('topState').textContent = topState;
+        }
+
+        // Get filtered societies based on current selection
+        function getFilteredSocieties() {
+            let filtered = societies;
+            
+            if (selectedState !== 'all') {
+                filtered = filtered.filter(s => s.state === selectedState);
+            }
+            
+            return filtered.sort((a, b) => b.ecoScore - a.ecoScore);
+        }
+
+        // Update leaderboard
+        function updateLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            const filteredSocieties = getFilteredSocieties();
+            
+            leaderboard.innerHTML = filteredSocieties.slice(0, 10).map((society, index) => {
+                const rank = index + 1;
+                let rankClass = '';
+                let rankColorClass = '';
+                
+                if (rank === 1) {
+                    rankClass = 'top-1';
+                    rankColorClass = 'gold';
+                } else if (rank === 2) {
+                    rankClass = 'top-2';
+                    rankColorClass = 'silver';
+                } else if (rank === 3) {
+                    rankClass = 'top-3';
+                    rankColorClass = 'bronze';
+                }
+                
+                return `
+                    <div class="leaderboard-item ${rankClass}">
+                        <div class="rank-info">
+                            <div class="rank-number ${rankColorClass}">${rank}</div>
+                            <div class="society-info">
+                                <div class="society-name">
+                                    ${society.societyName || society.name}
+                                    ${society.societyId && society.societyId.startsWith('ECO') ? '<span class="new-badge">NEW</span>' : ''}
+                                </div>
+                                <div class="society-details">
+                                    ${society.city}, ${society.state?.charAt(0).toUpperCase() + society.state?.slice(1).replace('-', ' ')} • 
+                                    ${society.totalUnits} units • 
+                                    ${society.carbonReduced} kg CO₂ reduced
+                                    ${society.ecoInitiatives ? ` • ${society.ecoInitiatives.length} initiatives` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="eco-score">${society.ecoScore}/100</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Create charts
+        function createCharts() {
+            createStateChart();
+            createInitiativesChart();
+            createCarbonTrendChart();
+        }
+
+        // State-wise pie chart
+        function createStateChart() {
+            const ctx = document.getElementById('stateChart').getContext('2d');
+            
+            const stateData = {};
+            societies.forEach(society => {
+                const state = society.state?.charAt(0).toUpperCase() + society.state?.slice(1).replace('-', ' ') || 'Unknown';
+                stateData[state] = (stateData[state] || 0) + 1;
+            });
+            
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(stateData),
+                    datasets: [{
+                        data: Object.values(stateData),
+                        backgroundColor: [
+                            '#27ae60', '#2ecc71', '#3498db', '#9b59b6',
+                            '#e74c3c', '#f39c12', '#f1c40f', '#95a5a6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Societies by State',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initiatives bar chart
+        function createInitiativesChart() {
+            const ctx = document.getElementById('initiativesChart').getContext('2d');
+            
+            const initiativeCount = {};
+            const initiativeLabels = {
+                'waste-segregation': 'Waste Segregation',
+                'solar-panels': 'Solar Panels',
+                'rainwater-harvesting': 'Rainwater Harvesting',
+                'composting': 'Composting',
+                'led-lighting': 'LED Lighting',
+                'electric-vehicles': 'EV Charging',
+                'organic-garden': 'Organic Garden',
+                'water-conservation': 'Water Conservation'
+            };
+            
+            societies.forEach(society => {
+                if (society.initiatives) {
+                    society.initiatives.forEach(initiative => {
+                        const label = initiativeLabels[initiative] || initiative;
+                        initiativeCount[label] = (initiativeCount[label] || 0) + 1;
+                    });
+                }
+                if (society.ecoInitiatives) {
+                    society.ecoInitiatives.forEach(initiative => {
+                        const label = initiativeLabels[initiative] || initiative;
+                        initiativeCount[label] = (initiativeCount[label] || 0) + 1;
+                    });
+                }
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(initiativeCount),
+                    datasets: [{
+                        label: 'Societies',
+                        data: Object.values(initiativeCount),
+                        backgroundColor: '#27ae60',
+                        borderColor: '#2ecc71',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Popular Eco Initiatives',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { 
+                                color: '#ffffff',
+                                maxRotation: 45
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Carbon reduction trend chart
+        function createCarbonTrendChart() {
+            const ctx = document.getElementById('carbonTrendChart').getContext('2d');
+            
+            // Generate mock monthly data
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const carbonData = [1200, 1800, 2400, 3200, 4100, 5200];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'CO₂ Reduced (kg)',
+                        data: carbonData,
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Carbon Reduction Trend',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Change view function
+        function changeView(view) {
+            currentView = view;
+            
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update leaderboard based on view
+            updateLeaderboard();
+        }
+
+        // State filter change
+        document.getElementById('stateFilter').addEventListener('change', function(e) {
+            selectedState = e.target.value;
+            updateStats();
+            updateLeaderboard();
+        });
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboard();
+        });
+    </script>
+</body>
+</html>

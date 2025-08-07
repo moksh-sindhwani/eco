@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="download.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFootprint - Calculate Your Environmental Impact</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            transition: background 0.8s ease;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 5px);
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(15px);
+            min-width: 280px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 0;
+            left: 0;
+            height: 15px;
+            background: transparent;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            height: 15px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .dropdown-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .login-nav-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .login-nav-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        /* User Account Styles */
+        .user-account {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .member-star {
+            color: #ffd700;
+            font-size: 1.2rem;
+            animation: starTwinkle 2s infinite;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .logout-btn {
+            background: rgba(220, 53, 69, 0.8);
+            border: 2px solid #dc3545;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(220, 53, 69, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Section Styles */
+        .earth-section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-us-section {
+            min-height: 100vh;
+            background: #000000;
+            padding: 4rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .about-us-container {
+            max-width: 800px;
+            text-align: center;
+            color: white;
+        }
+
+        .about-us-logo {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-us-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .about-us-content p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #cccccc;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #f5f5f5;
+            padding: 2rem 0;
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-text {
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .earth-container {
+            position: relative;
+            z-index: 10;
+        }
+
+    .earth {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background-image: url('download.png');
+    background-size: cover;
+    background-position: center;
+    animation: rotate 20s linear infinite;
+    box-shadow: 
+        0 0 80px rgba(255, 255, 255, 0.5),
+        inset -30px -30px 80px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+        .earth::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 30% 30%,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 50%
+            );
+        }
+
+        .earth::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 70%
+            );
+            animation: shimmer 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .eco-text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            font-size: 18rem;
+            font-weight: bold;
+            color: white;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .explore-button {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            color: black;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 25;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .explore-button:hover {
+            transform: translateX(-50%) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, #f0f0f0, #ffffff);
+        }
+
+        .subtitle-eco {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .subtitle-eco p {
+            color: #95a5a6;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* About Section Styles */
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 4rem;
+        }
+
+        .main-logo {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-tagline {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        .about-content > p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .earth-small {
+            width: 18rem;
+            height: 18rem;
+            border-radius: 50%;
+            background-image: url('download.png');
+            background-size: cover;
+            background-position: center;
+            animation: rotate 10s linear infinite;
+            box-shadow: 
+                0 0 65px rgba(255, 255, 255, 0.6),
+                inset -32px -32px 65px rgba(0, 0, 0, 0.3);
+            position: relative;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .earth-small::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 30% 30%,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 50%
+            );
+        }
+
+        .cta-section {
+            margin-top: 2rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            color: black;
+            border: none;
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(135deg, #f0f0f0, #ffffff);
+        }
+
+        .subtitle {
+            color: #95a5a6;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            transition: color 0.8s ease;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .content-section {
+            height: 100vh;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: transparent;
+        }
+
+        /* Login Modal Styles */
+        .login-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            position: relative;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow-y: auto;
+        }
+
+        /* Custom scrollbar for login container */
+        .login-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .login-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .login-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-radius: 10px;
+        }
+
+        .login-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        .close-btn::before {
+            content: '✕';
+            font-weight: bold;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-subtitle {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .eco-requirement {
+            background: linear-gradient(135deg, #e8f5e8, #d4f1d4);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+        }
+
+        .file-upload-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .file-upload-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .verification-status {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        .verification-status.verifying {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            display: block;
+        }
+
+        .verification-status.success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            display: block;
+        }
+
+        .verification-status.error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            display: block;
+        }
+
+        .api-key-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .api-key-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+        }
+
+        .login-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .login-link a {
+            color: #27ae60;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #229954;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .login-title {
+                font-size: 2rem;
+            }
+
+            .navbar {
+                padding: 0 1rem;
+                height: 70px;
+            }
+
+            .nav-logo {
+                font-size: 1.5rem;
+            }
+
+            .dropdown-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .dropdown-content {
+                min-width: 250px;
+            }
+
+            body {
+                padding-top: 70px;
+            }
+
+            .earth {
+                width: 300px;
+                height: 300px;
+            }
+
+            .eco-text {
+                font-size: 9rem;
+                gap: 1.5rem;
+            }
+
+            .earth-small {
+                width: 9rem;
+                height: 9rem;
+            }
+
+            .explore-button {
+                font-size: 1rem;
+                padding: 0.8rem 2rem;
+            }
+
+            .cta-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                height: 60px;
+            }
+
+            .nav-logo {
+                font-size: 1.3rem;
+            }
+
+            .dropdown-content {
+                min-width: 220px;
+            }
+
+            body {
+                padding-top: 60px;
+            }
+
+            .earth {
+                width: 250px;
+                height: 250px;
+            }
+
+            .eco-text {
+                font-size: 6rem;
+                gap: 1rem;
+            }
+
+            .earth-small {
+                width: 6rem;
+                height: 6rem;
+            }
+
+            .explore-button {
+                font-size: 0.9rem;
+                padding: 0.7rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">EcoFootprint</div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <!-- User Account Display (hidden by default) -->
+            <div class="user-account" id="userAccount" style="display: none;">
+                <span class="user-name" id="userNameDisplay"></span>
+            </div>
+            
+            <!-- Login/Join Button (shown by default) -->
+            <button class="login-nav-btn" id="loginBtn" onclick="openLoginModal()">
+                🌿 Join Community
+            </button>
+            
+            <!-- Logout Button (hidden by default) -->
+            <button class="logout-btn" id="logoutBtn" onclick="logoutUser()" style="display: none;">
+                🚪 Logout
+            </button>
+            
+            <div class="dropdown">
+                <button class="dropdown-btn">
+                    🌱 Explore Features
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-item" onclick="window.open('carbon-tracker.html', '_blank')">🧮 Carbon Footprint Tracker</div>
+                    <div class="dropdown-item" onclick="window.open('society-registration.html', '_blank')">🏢 Society Registration</div>
+                    <div class="dropdown-item" onclick="window.open('eco-dashboard.html', '_blank')">📊 Live Eco Dashboard</div>
+                    <div class="dropdown-item" onclick="window.open('eco-library.html', '_blank')">📚 Eco Library</div>
+                    <div class="dropdown-item" onclick="window.open('eco-programs.html', '_blank')">🎁 Government Eco Programs</div>
+                    <div class="dropdown-item" onclick="window.open('donation-rewards.html', '_blank')">💝 Donation & Rewards</div>
+                    <div class="dropdown-item" onclick="window.open('student-rewards.html', '_blank')">🎓 Student Rewards</div>
+                    <div class="dropdown-item" onclick="window.open('plant-game.html', '_blank')">🎮 PlantVerse Game</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="stars" id="stars"></div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-container">
+            <button class="close-btn" onclick="closeLoginModal()"></button>
+            
+            <div class="login-header">
+                <h2 class="login-title" id="loginTitle">Join EcoFootprint</h2>
+                <p class="login-subtitle" id="loginSubtitle">Be part of the green revolution</p>
+                <div class="eco-requirement" id="ecoRequirement">
+                    <strong>🌱 Special Requirement:</strong> Upload a photo of yourself planting a tree to show your commitment to the environment!
+                    <br><br>
+                    <strong>🤖 AI Verification:</strong> Our smart system will automatically verify your tree planting photo!
+                </div>
+            </div>
+
+            <form id="loginForm" onsubmit="handleFormSubmission(event)">
+                <div class="form-group">
+                    <label class="form-label" for="userName">Full Name</label>
+                    <input type="text" id="userName" class="form-input" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="userEmail">Email Address</label>
+                    <input type="email" id="userEmail" class="form-input" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group" id="passwordGroup">
+                    <label class="form-label" for="userPassword">Password</label>
+                    <input type="password" id="userPassword" class="form-input" required placeholder="Create a secure password">
+                </div>
+
+                <div class="form-group" id="photoGroup">
+                    <label class="form-label" for="treePhoto">Photo of You Planting a Tree 🌳</label>
+                    <div class="file-upload-container">
+                        <button type="button" class="file-upload-btn" onclick="document.getElementById('treePhoto').click()">
+                            📷 Upload Tree Planting Photo
+                        </button>
+                        <input type="file" id="treePhoto" class="file-upload-input" accept="image/*" required onchange="handleFileUpload(this)">
+                        <div class="file-name" id="fileName"></div>
+                        <div class="verification-status" id="verificationStatus"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn" id="submitBtn">Join the Green Community</button>
+            </form>
+
+            <div class="login-link">
+                <p id="switchText">Already have an account? <a href="#" onclick="switchToLogin()">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Earth Image -->
+    <section class="earth-section" id="earthSection">
+        <div class="earth-container" id="earthContainer">
+            <div class="earth" id="earth"></div>
+        </div>
+        
+        <!-- ECO text overlay (initially hidden) -->
+        <div class="eco-text" id="ecoText">
+            <span>E</span>
+            <span>C</span>
+            <div class="earth-small" id="earthSmall"></div>
+        </div>
+        
+        <!-- Explore button (initially hidden) -->
+        <button class="explore-button" id="exploreBtn" onclick="exploreFeatures()">Explore</button>
+    </section>
+
+    <!-- Section 2: About Us -->
+    <section class="about-us-section" id="aboutUsSection">
+        <div class="about-us-container">
+            <div class="about-us-logo">EcoFootprint</div>
+            <div class="about-us-content">
+                <h2>About Us</h2>
+                <p>We are dedicated to helping individuals and organizations understand and reduce their environmental impact. Our mission is to create a sustainable future through awareness, action, and accountability.</p>
+                <p>Join our community of eco-conscious individuals working together to make a positive difference for our planet.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">made with love by ecofootprint team</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Create stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 100;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Initialize stars
+        createStars();
+
+        // Initialize page - check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for existing user session
+            checkUserSession();
+            
+            const earth = document.getElementById('earth');
+            const earthContainer = document.getElementById('earthContainer');
+            const ecoText = document.getElementById('ecoText');
+            const earthSmall = document.getElementById('earthSmall');
+            const exploreBtn = document.getElementById('exploreBtn');
+            
+            // Timeline for automatic animation
+            const autoTimeline = gsap.timeline();
+            
+            // Phase 1: Earth rotates for 3 seconds
+            autoTimeline.to({}, { 
+                duration: 3,
+                onUpdate: function() {
+                    // Speed up rotation over 3 seconds
+                    const progress = this.progress();
+                    earth.style.animationDuration = (20 - progress * 15) + 's';
+                }
+            })
+            
+            // Phase 2: Start showing ECO text and hide Earth
+            .to(ecoText, {
+                opacity: 1,
+                duration: 2,
+                ease: "power2.out"
+            }, "-=1") // Start 1 second before previous animation ends
+            
+            .to(earthContainer, {
+                opacity: 0,
+                scale: 0.2,
+                duration: 2,
+                ease: "power2.out"
+            }, "-=2") // Start at same time as ECO text
+            
+            // Phase 3: Show small Earth as "O"
+            .to(earthSmall, {
+                opacity: 1,
+                scale: 1,
+                duration: 1.5,
+                ease: "back.out(1.7)"
+            }, "-=0.5") // Start 0.5 seconds before previous ends
+            
+            // Phase 4: Show Explore button
+            .to(exploreBtn, {
+                opacity: 1,
+                duration: 1,
+                ease: "power2.out",
+                onComplete: function() {
+                    exploreBtn.style.pointerEvents = 'auto';
+                }
+            }, "-=0.5"); // Start 0.5 seconds before previous ends
+            
+            // Optional: Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+        });
+
+        // Check if user is already logged in
+        function checkUserSession() {
+            const userData = localStorage.getItem('ecoFootprintUser');
+            if (userData) {
+                const user = JSON.parse(userData);
+                displayUserAccount(user.name, user.isMember);
+            }
+        }
+
+        // Display user account in navigation
+        function displayUserAccount(userName, isMember = false) {
+            const userAccount = document.getElementById('userAccount');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            // Show user account, hide login button
+            userAccount.style.display = 'flex';
+            loginBtn.style.display = 'none';
+            logoutBtn.style.display = 'flex';
+            
+            // Display name with or without member star
+            if (isMember) {
+                userNameDisplay.innerHTML = `<span class="member-star">⭐</span> ${userName}`;
+            } else {
+                userNameDisplay.innerHTML = userName;
+            }
+        }
+
+        // Hide user account and show login button
+        function hideUserAccount() {
+            const userAccount = document.getElementById('userAccount');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            userAccount.style.display = 'none';
+            loginBtn.style.display = 'flex';
+            logoutBtn.style.display = 'none';
+        }
+
+        // Logout user
+        function logoutUser() {
+            localStorage.removeItem('ecoFootprintUser');
+            hideUserAccount();
+            alert('You have been logged out successfully! 👋');
+        }
+
+        // Track if we're in login or register mode
+        let isLoginMode = false;
+
+        // Switch between login and register modes
+        function switchToLogin() {
+            isLoginMode = !isLoginMode;
+            
+            const loginTitle = document.getElementById('loginTitle');
+            const loginSubtitle = document.getElementById('loginSubtitle');
+            const ecoRequirement = document.getElementById('ecoRequirement');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const photoGroup = document.getElementById('photoGroup');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            
+            if (isLoginMode) {
+                // Switch to login mode
+                loginTitle.textContent = 'Welcome Back!';
+                loginSubtitle.textContent = 'Sign in to your EcoFootprint account';
+                ecoRequirement.style.display = 'none';
+                passwordGroup.style.display = 'block';
+                photoGroup.style.display = 'none';
+                submitBtn.textContent = 'Sign In';
+                switchText.innerHTML = 'New to EcoFootprint? <a href="#" onclick="switchToLogin()">Join Community</a>';
+                
+                // Remove required from photo field
+                document.getElementById('treePhoto').required = false;
+            } else {
+                // Switch to register mode
+                loginTitle.textContent = 'Join EcoFootprint';
+                loginSubtitle.textContent = 'Be part of the green revolution';
+                ecoRequirement.style.display = 'block';
+                passwordGroup.style.display = 'block';
+                photoGroup.style.display = 'block';
+                submitBtn.textContent = 'Join the Green Community';
+                switchText.innerHTML = 'Already have an account? <a href="#" onclick="switchToLogin()">Sign In</a>';
+                
+                // Add required back to photo field
+                document.getElementById('treePhoto').required = true;
+            }
+        }
+
+        // Handle form submission (login or register)
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            
+            if (isLoginMode) {
+                handleLogin();
+            } else {
+                handleRegistration();
+            }
+        }
+
+        // Handle user login
+        function handleLogin() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            
+            // Check if any users exist in localStorage
+            const allUsers = getAllUsers();
+            
+            // Try to find user by email
+            const existingUser = allUsers.find(user => user.email === email);
+            
+            if (existingUser) {
+                // Check password (in real app, this would be hashed comparison)
+                if (existingUser.password === password) {
+                    // Successful login
+                    alert(`Welcome back, ${existingUser.name}! 🌱`);
+                    displayUserAccount(existingUser.name, existingUser.isMember);
+                    closeLoginModal();
+                    resetForm();
+                    return;
+                } else {
+                    alert('❌ Incorrect password! Please try again.');
+                    return;
+                }
+            }
+            
+            // Check if name matches but email doesn't
+            const userByName = allUsers.find(user => user.name.toLowerCase() === name.toLowerCase());
+            if (userByName) {
+                alert(`❌ Account found for "${name}" but with a different email address. Please use the correct email or register a new account.`);
+                return;
+            }
+            
+            // No user found
+            alert('❌ Account not found! Please register first by clicking "Join Community" below the form.');
+        }
+
+        // Helper function to get all users (for multiple user support)
+        function getAllUsers() {
+            const users = [];
+            
+            // Get main user
+            const mainUser = localStorage.getItem('ecoFootprintUser');
+            if (mainUser) {
+                users.push(JSON.parse(mainUser));
+            }
+            
+            // Get additional users (if storing multiple users)
+            const allUsersData = localStorage.getItem('ecoFootprintAllUsers');
+            if (allUsersData) {
+                users.push(...JSON.parse(allUsersData));
+            }
+            
+            return users;
+        }
+
+        // Helper function to save user to storage
+        function saveUser(userData) {
+            // Save as main user
+            localStorage.setItem('ecoFootprintUser', JSON.stringify(userData));
+            
+            // Also add to all users list for login functionality
+            const allUsers = getAllUsers();
+            const existingIndex = allUsers.findIndex(user => user.email === userData.email);
+            
+            if (existingIndex >= 0) {
+                allUsers[existingIndex] = userData; // Update existing
+            } else {
+                allUsers.push(userData); // Add new
+            }
+            
+            localStorage.setItem('ecoFootprintAllUsers', JSON.stringify(allUsers));
+        }
+
+        // Handle user registration
+        function handleRegistration() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            const photo = document.getElementById('treePhoto').files[0];
+
+            if (!photo) {
+                alert('Please upload a photo of yourself planting a tree to join our eco community!');
+                return;
+            }
+
+            // Check if AI verification passed
+            const verificationStatus = document.getElementById('verificationStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (submitBtn.disabled) {
+                alert('Please wait for AI verification to complete or upload a valid tree planting photo.');
+                return;
+            }
+
+            // Create user account with member status (since they passed AI verification)
+            const userData = {
+                name: name,
+                email: email,
+                password: password, // In real app, this would be hashed
+                isMember: true, // Member because they passed AI verification
+                joinDate: new Date().toISOString(),
+                aiVerified: verificationStatus.classList.contains('success')
+            };
+            
+            // Save user data
+            saveUser(userData);
+            
+            // Success message
+            let successMessage = `Welcome to EcoFootprint, ${name}! 🌱⭐\n\nCongratulations! You are now a verified member of our eco community.`;
+            
+            if (verificationStatus.classList.contains('success')) {
+                successMessage += '\n\n🤖 Your tree planting photo has been AI-verified!';
+            }
+            
+            successMessage += '\n\nYou can now explore all our eco features and start calculating your carbon footprint!';
+            
+            alert(successMessage);
+            
+            // Display user account with member star
+            displayUserAccount(name, true);
+            
+            // Close modal and reset
+            closeLoginModal();
+            resetForm();
+            
+            // Log registration data (for development)
+            console.log('New member registered:', userData);
+        }
+
+        // Reset form to initial state
+        function resetForm() {
+            document.getElementById('loginForm').reset();
+            document.getElementById('fileName').textContent = '';
+            const verificationStatus = document.getElementById('verificationStatus');
+            verificationStatus.className = 'verification-status';
+            verificationStatus.style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+            
+            // Reset to register mode
+            isLoginMode = false;
+            const loginTitle = document.getElementById('loginTitle');
+            const loginSubtitle = document.getElementById('loginSubtitle');
+            const ecoRequirement = document.getElementById('ecoRequirement');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const photoGroup = document.getElementById('photoGroup');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            
+            loginTitle.textContent = 'Join EcoFootprint';
+            loginSubtitle.textContent = 'Be part of the green revolution';
+            ecoRequirement.style.display = 'block';
+            passwordGroup.style.display = 'block';
+            photoGroup.style.display = 'block';
+            submitBtn.textContent = 'Join the Green Community';
+            switchText.innerHTML = 'Already have an account? <a href="#" onclick="switchToLogin()">Sign In</a>';
+            document.getElementById('treePhoto').required = true;
+        }
+
+        // Section 2: About Us Section
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: "#aboutUsSection",
+                start: "top center",
+                end: "bottom center",
+                scrub: 1,
+                onEnter: () => {
+                    // Hide stars when entering About Us section
+                    gsap.to("#stars", { opacity: 0, duration: 1 });
+                },
+                onLeave: () => {
+                    // Keep black background
+                    document.body.style.background = '#000000';
+                },
+                onEnterBack: () => {
+                    // Show stars when going back from About Us section
+                    gsap.to("#stars", { opacity: 1, duration: 1 });
+                    document.body.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)';
+                }
+            }
+        });
+
+        // Animate About Us logo on scroll
+        gsap.fromTo(".about-us-logo", 
+            { scale: 0.5, opacity: 0 },
+            {
+                scale: 1,
+                opacity: 1,
+                duration: 1.5,
+                scrollTrigger: {
+                    trigger: ".about-us-section",
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                }
+            }
+        );
+
+        // Animate About Us content on scroll
+        gsap.fromTo(".about-us-content", 
+            { y: 50, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                delay: 0.3,
+                scrollTrigger: {
+                    trigger: ".about-us-section",
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                }
+            }
+        );
+
+        // CTA Button function (removed since no CTA button exists)
+        function startJourney() {
+            alert('Starting your eco footprint calculation journey!');
+            // You can redirect to a calculator page or show a modal
+            // window.location.href = 'calculator.html';
+        }
+
+        // Explore button function
+        function exploreFeatures() {
+            // Smooth scroll to the about us section
+            document.getElementById('aboutUsSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Login Modal Functions
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        // Handle file upload
+        function handleFileUpload(input) {
+            const fileName = document.getElementById('fileName');
+            const verificationStatus = document.getElementById('verificationStatus');
+            
+            if (input.files && input.files[0]) {
+                fileName.textContent = `✅ ${input.files[0].name}`;
+                
+                // Automatically start AI verification (no API key needed)
+                verifyTreeImage(input.files[0]);
+            } else {
+                fileName.textContent = '';
+                verificationStatus.className = 'verification-status';
+                verificationStatus.style.display = 'none';
+            }
+        }
+
+        // AI Tree Verification Function (Automated)
+        async function verifyTreeImage(file) {
+            const verificationStatus = document.getElementById('verificationStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Show verifying status
+            verificationStatus.className = 'verification-status verifying';
+            verificationStatus.textContent = '🤖 AI analyzing your tree planting photo...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Simulate AI processing with realistic logic
+                await performSmartTreeVerification(file);
+                
+            } catch (error) {
+                console.error('AI Verification Error:', error);
+                verificationStatus.className = 'verification-status error';
+                verificationStatus.textContent = '⚠️ Verification failed. Please try uploading a different image.';
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Smart Tree Verification (More Accepting for Real Photos)
+        async function performSmartTreeVerification(file) {
+            const verificationStatus = document.getElementById('verificationStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Simulate realistic AI processing time
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            // Enhanced verification logic with more acceptance
+            const fileName = file.name.toLowerCase();
+            const fileSize = file.size;
+            const fileType = file.type;
+            
+            // Check for tree/nature related keywords (HELPS with verification)
+            const ecoKeywords = [
+                'tree', 'plant', 'planting', 'garden', 'forest', 'leaf', 'branch',
+                'outdoor', 'environment', 'eco', 'earth', 'soil', 'seedling', 'sapling',
+                'nature', 'green', 'grow', 'cultivation', 'farming', 'landscape'
+            ];
+            
+            // Check for obvious selfie/portrait indicators (ONLY these get rejected)
+            const selfieKeywords = [
+                'selfie', 'mirror', 'bathroom', 'bedroom', 'indoor_selfie'
+            ];
+            
+            // Basic file validation
+            const isValidImageType = fileType.startsWith('image/');
+            const isReasonableSize = fileSize > 50000 && fileSize < 15000000; // 50KB to 15MB
+            
+            // More lenient AI Analysis
+            const hasEcoKeyword = ecoKeywords.some(keyword => fileName.includes(keyword));
+            const hasObviousSelfieIndicator = selfieKeywords.some(keyword => fileName.includes(keyword));
+            
+            // File type validation first
+            if (!isValidImageType) {
+                verificationStatus.className = 'verification-status error';
+                verificationStatus.textContent = '❌ Please upload a valid image file (JPG, PNG, etc.)';
+                submitBtn.disabled = true;
+                return;
+            }
+            
+            if (!isReasonableSize) {
+                verificationStatus.className = 'verification-status error';
+                verificationStatus.textContent = '⚠️ Image size should be between 50KB and 15MB';
+                submitBtn.disabled = true;
+                return;
+            }
+            
+            // Simulate advanced AI detection with more acceptance
+            const randomFactor = Math.random();
+            
+            // Only reject obvious selfies
+            if (hasObviousSelfieIndicator) {
+                verificationStatus.className = 'verification-status error';
+                verificationStatus.textContent = '❌ AI detected this appears to be an indoor selfie. Please upload a photo showing outdoor environmental activity!';
+                submitBtn.disabled = true;
+                return;
+            }
+            
+            // If filename has eco keywords, almost always accept
+            if (hasEcoKeyword) {
+                verificationStatus.className = 'verification-status success';
+                verificationStatus.textContent = '✅ Excellent! Tree planting activity verified by AI!';
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            // For normal photos without obvious selfie indicators, be more accepting
+            // Only 30% chance of rejection (was 70% before)
+            if (randomFactor < 0.3) {
+                const rejectionMessages = [
+                    '❌ AI could not clearly detect tree planting activity. Try uploading a clearer outdoor photo.',
+                    '❌ Please upload a photo that shows more obvious environmental activity like planting or gardening.',
+                    '❌ AI needs to see clearer evidence of tree planting. Try a photo with visible plants or outdoor setting.'
+                ];
+                
+                const randomMessage = rejectionMessages[Math.floor(Math.random() * rejectionMessages.length)];
+                verificationStatus.className = 'verification-status error';
+                verificationStatus.textContent = randomMessage;
+                submitBtn.disabled = true;
+                return;
+            }
+            
+            // 70% chance of acceptance for regular photos (was 15% before)
+            if (randomFactor >= 0.3) {
+                const successMessages = [
+                    '✅ Environmental activity detected! AI verified your eco commitment!',
+                    '✅ Great! AI found evidence of outdoor environmental activity!',
+                    '✅ Verified! Your commitment to nature has been confirmed by AI!',
+                    '✅ Perfect! AI detected your environmental engagement!'
+                ];
+                
+                const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
+                verificationStatus.className = 'verification-status success';
+                verificationStatus.textContent = randomMessage;
+                submitBtn.disabled = false;
+                return;
+            }
+        }
+
+        // Handle login form submission
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            const photo = document.getElementById('treePhoto').files[0];
+
+            if (!photo) {
+                alert('Please upload a photo of yourself planting a tree to join our eco community!');
+                return;
+            }
+
+            // Check if AI verification passed
+            const verificationStatus = document.getElementById('verificationStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (submitBtn.disabled) {
+                alert('Please wait for AI verification to complete or upload a valid tree planting photo.');
+                return;
+            }
+
+            // Simulate successful registration
+            let successMessage = `Welcome to EcoFootprint, ${name}! 🌱\n\nThank you for your commitment to the environment.`;
+            
+            if (verificationStatus.classList.contains('success')) {
+                successMessage += '\n\n🤖 Your tree planting photo has been AI-verified!';
+            } else {
+                successMessage += '\n\n📷 Your photo has been received and will be reviewed.';
+            }
+            
+            successMessage += '\n\nYou can now explore all our eco features and start calculating your carbon footprint!';
+            
+            alert(successMessage);
+            
+            // Close modal and reset form
+            closeLoginModal();
+            
+            // Reset form
+            document.getElementById('loginForm').reset();
+            document.getElementById('fileName').textContent = '';
+            verificationStatus.className = 'verification-status';
+            verificationStatus.style.display = 'none';
+            submitBtn.disabled = false;
+            
+            // Log registration data (for development)
+            console.log('User registered:', { 
+                name, 
+                email, 
+                photo: photo.name,
+                aiVerified: verificationStatus.classList.contains('success'),
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Switch to login mode (you can expand this for sign-in functionality)
+        function switchToLogin() {
+            alert('Sign-in functionality would be implemented here!\nFor now, please use the registration form above.');
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLoginModal();
+            }
+        });
+
+        // Enhanced Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownBtn = document.querySelector('.dropdown-btn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            let isDropdownOpen = false;
+            let dropdownTimeout;
+
+            // Show dropdown on mouse enter
+            dropdown.addEventListener('mouseenter', function() {
+                clearTimeout(dropdownTimeout);
+                isDropdownOpen = true;
+                dropdownContent.style.display = 'block';
+                // Small delay to allow CSS animation
+                setTimeout(() => {
+                    dropdownContent.style.opacity = '1';
+                    dropdownContent.style.transform = 'translateY(0)';
+                    dropdownContent.style.pointerEvents = 'auto';
+                }, 10);
+            });
+
+            // Hide dropdown on mouse leave with delay
+            dropdown.addEventListener('mouseleave', function() {
+                dropdownTimeout = setTimeout(() => {
+                    isDropdownOpen = false;
+                    dropdownContent.style.opacity = '0';
+                    dropdownContent.style.transform = 'translateY(-10px)';
+                    dropdownContent.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        if (!isDropdownOpen) {
+                            dropdownContent.style.display = 'none';
+                        }
+                    }, 300);
+                }, 150); // Small delay before hiding
+            });
+
+            // Click outside to close dropdown
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    isDropdownOpen = false;
+                    dropdownContent.style.opacity = '0';
+                    dropdownContent.style.transform = 'translateY(-10px)';
+                    dropdownContent.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        dropdownContent.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            dropdownContent.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

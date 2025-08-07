@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Government Eco Programs - EcoFootprint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-back {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .header-section {
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: #95a5a6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #95a5a6;
+            font-size: 1rem;
+        }
+
+        /* Programs Grid */
+        .programs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .filter-section {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid transparent;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #27ae60;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-input::placeholder {
+            color: #95a5a6;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+            font-size: 1.2rem;
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .program-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: #27ae60;
+        }
+
+        .program-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .program-content {
+            padding: 2rem;
+        }
+
+        .program-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #27ae60;
+        }
+
+        .program-ministry {
+            color: #95a5a6;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .program-description {
+            color: #ecf0f1;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .program-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .program-tag {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .program-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.8rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .detail-label {
+            color: #95a5a6;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            color: white;
+            font-weight: 600;
+        }
+
+        .program-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+            color: #2c3e50;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #27ae60;
+        }
+
+        .modal-description {
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-info-item {
+            background: rgba(39, 174, 96, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            color: #95a5a6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-logo {
+                font-size: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .programs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .program-card {
+                margin: 0 1rem;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .filter-btn {
+                width: 200px;
+            }
+
+            .program-details {
+                grid-template-columns: 1fr;
+            }
+
+            .program-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding-top: 80px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .programs-container {
+                padding: 0 1rem;
+            }
+
+            .program-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">EcoFootprint</a>
+        <a href="index.html" class="nav-back">
+            ← Back to Home
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1 class="page-title">Government Eco Programs</h1>
+            <p class="page-subtitle">
+                Discover and explore the various environmental initiatives and programs launched by the Government of India 
+                to promote sustainability, conservation, and a greener future for our nation.
+            </p>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Active Programs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Ministries Involved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">500M+</div>
+                <div class="stat-label">Trees Planted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Cities Covered</div>
+            </div>
+        </div>
+
+        <!-- Programs Container -->
+        <div class="programs-container">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterPrograms('all')">All Programs</button>
+                    <button class="filter-btn" onclick="filterPrograms('forest')">Forest & Trees</button>
+                    <button class="filter-btn" onclick="filterPrograms('renewable')">Renewable Energy</button>
+                    <button class="filter-btn" onclick="filterPrograms('urban')">Urban Environment</button>
+                    <button class="filter-btn" onclick="filterPrograms('water')">Water Conservation</button>
+                    <button class="filter-btn" onclick="filterPrograms('waste')">Waste Management</button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search eco programs..." id="searchInput" oninput="searchPrograms()">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+
+            <!-- Programs Grid -->
+            <div class="programs-grid" id="programsGrid">
+                <!-- Programs will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Program Details Modal -->
+    <div class="modal" id="programModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-description" id="modalDescription"></div>
+            <div class="modal-info-grid" id="modalInfoGrid"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">🌱 Government of India Environmental Initiatives - Making India Greener</p>
+    </footer>
+
+    <script>
+        // Comprehensive Government Eco Programs Database
+        const ecoPrograms = [
+            {
+                id: 1,
+                title: "Swachh Bharat Mission",
+                ministry: "Ministry of Jal Shakti",
+                category: "waste",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=300&fit=crop",
+                description: "A nationwide campaign to eliminate open defecation and improve solid waste management. The mission aims to make India clean and open defecation free.",
+                fullDescription: "Swachh Bharat Mission is the most significant cleanliness campaign by the Government of India. Launched on 2nd October 2014, it aims to eliminate open defecation and improve solid waste management across the country. The mission has two components: Swachh Bharat Mission (Gramin) for rural areas and Swachh Bharat Mission (Urban) for urban areas.",
+                launchYear: "2014",
+                budget: "₹62,009 Crore",
+                status: "Active",
+                beneficiaries: "130 Crore Citizens",
+                tags: ["Clean India", "Sanitation", "Waste Management", "Public Health"],
+                website: "https://swachhbharatmission.gov.in/",
+                achievements: [
+                    "11 crore toilets constructed",
+                    "6 lakh villages declared ODF",
+                    "Over 4,000 cities covered",
+                    "Significant reduction in child mortality"
+                ]
+            },
+            {
+                id: 2,
+                title: "Green India Mission",
+                ministry: "Ministry of Environment, Forest and Climate Change",
+                category: "forest",
+                image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&h=300&fit=crop",
+                description: "National mission to increase forest and tree cover across the country, aiming to enhance ecosystem services and climate resilience.",
+                fullDescription: "The Green India Mission is one of the eight missions under the National Action Plan on Climate Change. It aims to increase forest/tree cover on 5 million hectares of forest/non-forest lands and improve quality of forest cover on another 5 million hectares.",
+                launchYear: "2014",
+                budget: "₹46,000 Crore",
+                status: "Active",
+                beneficiaries: "Rural Communities",
+                tags: ["Afforestation", "Climate Change", "Biodiversity", "Ecosystem"],
+                website: "https://moef.gov.in/",
+                achievements: [
+                    "2.5 million hectares afforested",
+                    "Forest cover increased by 3%",
+                    "Enhanced livelihood opportunities",
+                    "Improved carbon sequestration"
+                ]
+            },
+            {
+                id: 3,
+                title: "National Solar Mission",
+                ministry: "Ministry of New and Renewable Energy",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=500&h=300&fit=crop",
+                description: "Ambitious program to establish India as a global leader in solar energy with a target of 100 GW solar capacity by 2022.",
+                fullDescription: "The Jawaharlal Nehru National Solar Mission is a major initiative to promote solar energy development in India. It aims to establish India as a global leader in solar energy by creating a favorable policy framework and environment for solar technology development and deployment.",
+                launchYear: "2010",
+                budget: "₹1,00,000 Crore",
+                status: "Active",
+                beneficiaries: "Entire Nation",
+                tags: ["Solar Energy", "Renewable Energy", "Clean Energy", "Grid Power"],
+                website: "https://mnre.gov.in/",
+                achievements: [
+                    "42 GW solar capacity installed",
+                    "World's largest solar park in Karnataka",
+                    "50% reduction in solar tariffs",
+                    "2.5 million solar installations"
+                ]
+            },
+            {
+                id: 4,
+                title: "Smart Cities Mission",
+                ministry: "Ministry of Housing and Urban Affairs",
+                category: "urban",
+                image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=500&h=300&fit=crop",
+                description: "Urban renewal program focusing on sustainable and smart city development with emphasis on environmental sustainability.",
+                fullDescription: "The Smart Cities Mission aims to develop 100 cities across the country making them citizen-friendly and sustainable. The mission focuses on core infrastructure elements including adequate water supply, assured electricity supply, sanitation, urban mobility, and environmental sustainability.",
+                launchYear: "2015",
+                budget: "₹2,05,018 Crore",
+                status: "Active",
+                beneficiaries: "100 Cities",
+                tags: ["Smart Cities", "Urban Planning", "Sustainability", "Technology"],
+                website: "https://smartcities.gov.in/",
+                achievements: [
+                    "100 cities selected",
+                    "7,000+ projects initiated",
+                    "₹1.9 lakh crore investment",
+                    "Improved urban infrastructure"
+                ]
+            },
+            {
+                id: 5,
+                title: "Jal Jeevan Mission",
+                ministry: "Ministry of Jal Shakti",
+                category: "water",
+                image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=500&h=300&fit=crop",
+                description: "Mission to provide safe and adequate drinking water through individual household tap connections to all households in rural India.",
+                fullDescription: "Jal Jeevan Mission envisages supply of 55 litres per capita per day of potable water through Functional Household Tap Connection (FHTC) to every rural household by 2024. The mission aims to create a jan andolan for water, making it everyone's priority.",
+                launchYear: "2019",
+                budget: "₹3,60,000 Crore",
+                status: "Active",
+                beneficiaries: "19 Crore Rural Households",
+                tags: ["Water Security", "Rural Development", "Clean Water", "Public Health"],
+                website: "https://jaljeevanmission.gov.in/",
+                achievements: [
+                    "8.7 crore households connected",
+                    "40+ districts declared Har Ghar Jal",
+                    "3.7 lakh villages covered",
+                    "Improved water quality testing"
+                ]
+            },
+            {
+                id: 6,
+                title: "National Electric Mobility Mission",
+                ministry: "Department of Heavy Industry",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=500&h=300&fit=crop",
+                description: "Comprehensive plan to achieve national fuel security and promote manufacturing of electric and hybrid vehicles in India.",
+                fullDescription: "The National Electric Mobility Mission Plan (NEMMP) 2020 aims at gradual introduction and market penetration of eco-friendly Electric Vehicles (EVs) in the country. The mission focuses on the progressive induction of reliable, affordable and efficient electric vehicles.",
+                launchYear: "2013",
+                budget: "₹25,000 Crore",
+                status: "Active",
+                beneficiaries: "Transport Sector",
+                tags: ["Electric Vehicles", "Clean Transport", "Battery Technology", "Emission Reduction"],
+                website: "https://dhi.nic.in/",
+                achievements: [
+                    "1.3 million EVs on roads",
+                    "5,000+ charging stations",
+                    "50% subsidy on EV purchase",
+                    "Major OEMs committed to EVs"
+                ]
+            },
+            {
+                id: 7,
+                title: "Pradhan Mantri Ujjwala Yojana",
+                ministry: "Ministry of Petroleum and Natural Gas",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=500&h=300&fit=crop",
+                description: "Program to provide LPG connections to women from below poverty line households to reduce indoor air pollution and health hazards.",
+                fullDescription: "Pradhan Mantri Ujjwala Yojana provides LPG connections to women from Below Poverty Line (BPL) households. The scheme aims to empower women and protect their health by providing them with a clean cooking fuel - LPG, so that they don't have to compromise their health in smoky kitchens or wander in unsafe areas collecting firewood.",
+                launchYear: "2016",
+                budget: "₹12,800 Crore",
+                status: "Active",
+                beneficiaries: "10 Crore Women",
+                tags: ["Clean Cooking", "Women Empowerment", "Health", "Rural Development"],
+                website: "https://pmuy.gov.in/",
+                achievements: [
+                    "9.5 crore LPG connections",
+                    "95% of households have LPG",
+                    "Reduced indoor air pollution",
+                    "Improved women's health"
+                ]
+            },
+            {
+                id: 8,
+                title: "National Mission for a Green India",
+                ministry: "Ministry of Environment, Forest and Climate Change",
+                category: "forest",
+                image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop",
+                description: "Comprehensive mission to enhance forest cover, improve ecosystem services, and increase carbon sequestration.",
+                fullDescription: "The National Mission for a Green India is one of the eight National Missions under the National Action Plan on Climate Change. It aims to protect, restore and enhance India's forest cover and to respond to climate change through a combination of adaptation and mitigation measures.",
+                launchYear: "2014",
+                budget: "₹46,000 Crore",
+                status: "Active",
+                beneficiaries: "Forest Communities",
+                tags: ["Forest Conservation", "Climate Action", "Carbon Sequestration", "Biodiversity"],
+                website: "https://greenindia.gov.in/",
+                achievements: [
+                    "5 million hectares targeted",
+                    "Enhanced forest quality",
+                    "Increased livelihood opportunities",
+                    "Improved ecosystem services"
+                ]
+            },
+            {
+                id: 9,
+                title: "Atal Mission for Rejuvenation and Urban Transformation (AMRUT)",
+                ministry: "Ministry of Housing and Urban Affairs",
+                category: "urban",
+                image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=500&h=300&fit=crop",
+                description: "Mission to improve basic infrastructure in cities focusing on water supply, sewerage, urban transport, and green spaces.",
+                fullDescription: "AMRUT aims to establish infrastructure that could ensure adequate robust sewage networks and water supply for urban transformation by implementing urban revival projects. The mission focuses on providing basic services to households and building amenities in cities.",
+                launchYear: "2015",
+                budget: "₹1,00,000 Crore",
+                status: "Active",
+                beneficiaries: "500 Cities",
+                tags: ["Urban Infrastructure", "Water Supply", "Sewerage", "Public Transport"],
+                website: "https://amrut.gov.in/",
+                achievements: [
+                    "2.77 crore water connections",
+                    "66 lakh sewer connections",
+                    "8,700+ projects completed",
+                    "Improved urban infrastructure"
+                ]
+            },
+            {
+                id: 10,
+                title: "National River Conservation Plan",
+                ministry: "Ministry of Jal Shakti",
+                category: "water",
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=300&fit=crop",
+                description: "Comprehensive plan to restore and conserve rivers through pollution control and sustainable water management practices.",
+                fullDescription: "The National River Conservation Plan aims to improve water quality of rivers through implementation of pollution abatement works to restore the wholesome nature of rivers. The plan covers major rivers across the country including Ganga, Yamuna, Narmada, and others.",
+                launchYear: "1995",
+                budget: "₹20,000 Crore",
+                status: "Active",
+                beneficiaries: "River Basin Communities",
+                tags: ["River Conservation", "Water Quality", "Pollution Control", "Ecosystem Restoration"],
+                website: "https://jalshakti-dowr.gov.in/",
+                achievements: [
+                    "45 rivers covered",
+                    "154 towns included",
+                    "Significant pollution reduction",
+                    "Improved river water quality"
+                ]
+            },
+            {
+                id: 11,
+                title: "Namami Gange Programme",
+                ministry: "Ministry of Jal Shakti",
+                category: "water",
+                image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop",
+                description: "Flagship program for conservation and rejuvenation of River Ganga through comprehensive planning and implementation.",
+                fullDescription: "Namami Gange Programme is an Integrated Conservation Mission approved as a 'Flagship Programme' by the Government of India. It aims to accomplish the twin objectives of effective abatement of pollution and conservation and rejuvenation of National River Ganga.",
+                launchYear: "2014",
+                budget: "₹20,000 Crore",
+                status: "Active",
+                beneficiaries: "Ganga Basin States",
+                tags: ["Ganga Conservation", "River Cleaning", "Sewage Treatment", "Biodiversity"],
+                website: "https://nmcg.nic.in/",
+                achievements: [
+                    "351 projects sanctioned",
+                    "143 projects completed",
+                    "Significant water quality improvement",
+                    "Enhanced river flow"
+                ]
+            },
+            {
+                id: 12,
+                title: "National Afforestation Programme",
+                ministry: "Ministry of Environment, Forest and Climate Change",
+                category: "forest",
+                image: "https://images.unsplash.com/photo-1574263867128-a3d5c1b1deae?w=500&h=300&fit=crop",
+                description: "Comprehensive afforestation program to increase forest cover and restore degraded forest areas across the country.",
+                fullDescription: "The National Afforestation Programme (NAP) aims to develop the forest resources with people's participation with a view to improving environmental security and livelihood of the forest fringe communities, especially the poor.",
+                launchYear: "2000",
+                budget: "₹5,000 Crore",
+                status: "Active",
+                beneficiaries: "Forest Fringe Communities",
+                tags: ["Afforestation", "Community Participation", "Livelihood", "Environmental Security"],
+                website: "https://moef.gov.in/",
+                achievements: [
+                    "8 lakh hectares afforested",
+                    "15,000 committees formed",
+                    "Enhanced biodiversity",
+                    "Improved rural livelihoods"
+                ]
+            },
+            {
+                id: 13,
+                title: "Pradhan Mantri Sahaj Bijli Har Ghar Yojana (Saubhagya)",
+                ministry: "Ministry of Power",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=500&h=300&fit=crop",
+                description: "Universal household electrification scheme to provide electricity access to all households in the country.",
+                fullDescription: "Saubhagya scheme aims to provide energy access to all by last mile connectivity and electricity connections to all remaining un-electrified households in rural areas and poor households in urban areas.",
+                launchYear: "2017",
+                budget: "₹16,320 Crore",
+                status: "Completed",
+                beneficiaries: "4 Crore Households",
+                tags: ["Rural Electrification", "Energy Access", "Grid Connection", "Power Supply"],
+                website: "https://saubhagya.gov.in/",
+                achievements: [
+                    "100% household electrification",
+                    "2.8 crore connections provided",
+                    "18 months ahead of schedule",
+                    "Universal energy access achieved"
+                ]
+            },
+            {
+                id: 14,
+                title: "National Clean Air Programme (NCAP)",
+                ministry: "Ministry of Environment, Forest and Climate Change",
+                category: "urban",
+                image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=300&fit=crop",
+                description: "Comprehensive plan to tackle air pollution in cities through coordinated efforts and technological solutions.",
+                fullDescription: "NCAP aims to meet the prescribed annual average ambient air quality standards at all locations in the country in a stipulated timeframe. It is a five-year action plan with a target to achieve 20-30% reduction in PM2.5 and PM10 concentration by 2024.",
+                launchYear: "2019",
+                budget: "₹4,400 Crore",
+                status: "Active",
+                beneficiaries: "132 Cities",
+                tags: ["Air Quality", "Pollution Control", "Urban Health", "Clean Air"],
+                website: "https://cpcb.nic.in/",
+                achievements: [
+                    "132 non-attainment cities covered",
+                    "Air quality monitoring enhanced",
+                    "Source apportionment studies",
+                    "Public awareness campaigns"
+                ]
+            },
+            {
+                id: 15,
+                title: "Perform, Achieve and Trade (PAT)",
+                ministry: "Ministry of Power",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=500&h=300&fit=crop",
+                description: "Market-based mechanism to enhance energy efficiency in energy-intensive industries through tradeable certificates.",
+                fullDescription: "PAT is a market-based mechanism to enhance cost effectiveness of improvements in energy efficiency in energy-intensive large industries and facilities, through certification of energy efficiency achievements.",
+                launchYear: "2012",
+                budget: "₹2,000 Crore",
+                status: "Active",
+                beneficiaries: "Energy Intensive Industries",
+                tags: ["Energy Efficiency", "Industrial Sector", "Carbon Trading", "Energy Conservation"],
+                website: "https://beeindia.gov.in/",
+                achievements: [
+                    "8.67% energy reduction achieved",
+                    "38.5 million tonne CO2 reduction",
+                    "₹7,000 crore energy savings",
+                    "921 designated consumers covered"
+                ]
+            },
+            {
+                id: 16,
+                title: "National Mission on Strategic Knowledge for Climate Change",
+                ministry: "Department of Science and Technology",
+                category: "forest",
+                image: "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=500&h=300&fit=crop",
+                description: "Mission to build knowledge systems for climate change adaptation and mitigation through scientific research.",
+                fullDescription: "This mission aims to build a vibrant and dynamic knowledge system that would inform and support national and regional climate action. It focuses on building knowledge systems for climate change adaptation and mitigation.",
+                launchYear: "2010",
+                budget: "₹1,500 Crore",
+                status: "Active",
+                beneficiaries: "Research Institutions",
+                tags: ["Climate Research", "Knowledge Systems", "Scientific Research", "Climate Action"],
+                website: "https://dst.gov.in/",
+                achievements: [
+                    "National Knowledge Network established",
+                    "Climate modeling capabilities enhanced",
+                    "Research institutions strengthened",
+                    "Climate data systems improved"
+                ]
+            },
+            {
+                id: 17,
+                title: "Waste to Energy Programme",
+                ministry: "Ministry of New and Renewable Energy",
+                category: "waste",
+                image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500&h=300&fit=crop",
+                description: "Program to promote waste-to-energy projects for sustainable waste management and renewable energy generation.",
+                fullDescription: "The programme aims to promote waste-to-energy as a renewable energy technology for treatment of municipal solid waste in an environmentally sound manner with recovery of energy in the form of biogas/power/heat.",
+                launchYear: "2003",
+                budget: "₹3,000 Crore",
+                status: "Active",
+                beneficiaries: "Urban Areas",
+                tags: ["Waste Management", "Renewable Energy", "Biogas", "Circular Economy"],
+                website: "https://mnre.gov.in/",
+                achievements: [
+                    "169.35 MW waste-to-energy capacity",
+                    "85 projects commissioned",
+                    "Sustainable waste management",
+                    "Reduced landfill dependency"
+                ]
+            },
+            {
+                id: 18,
+                title: "National Water Mission",
+                ministry: "Ministry of Jal Shakti",
+                category: "water",
+                image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500&h=300&fit=crop",
+                description: "Comprehensive mission to ensure integrated water resource management and conservation through efficiency and equity.",
+                fullDescription: "National Water Mission aims to ensure integrated water resource management helping to conserve water, minimize wastage and ensure equitable distribution both across and within states through efficient water use practices.",
+                launchYear: "2011",
+                budget: "₹10,000 Crore",
+                status: "Active",
+                beneficiaries: "All Water Users",
+                tags: ["Water Conservation", "Resource Management", "Efficiency", "Equity"],
+                website: "https://nwm.gov.in/",
+                achievements: [
+                    "20% improvement in water use efficiency",
+                    "Increase in water storage capacity",
+                    "Better groundwater management",
+                    "Enhanced water security"
+                ]
+            },
+            {
+                id: 19,
+                title: "PM-KUSUM",
+                ministry: "Ministry of New and Renewable Energy",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=500&h=300&fit=crop",
+                description: "Scheme to provide financial support for installation of solar pumps and grid-connected solar power plants for farmers.",
+                fullDescription: "Pradhan Mantri Kisan Urja Suraksha evam Utthaan Mahabhiyan aims to add solar capacity of 25,750 MW by 2022. It will provide financial support to farmers for installation of solar pumps and grid-connected solar power plants.",
+                launchYear: "2019",
+                budget: "₹34,422 Crore",
+                status: "Active",
+                beneficiaries: "20 Lakh Farmers",
+                tags: ["Solar Agriculture", "Farmer Welfare", "Rural Energy", "Sustainable Agriculture"],
+                website: "https://pmkusum.mnre.gov.in/",
+                achievements: [
+                    "2.14 lakh solar pumps installed",
+                    "Enhanced agricultural productivity",
+                    "Reduced diesel dependency",
+                    "Additional farmer income"
+                ]
+            },
+            {
+                id: 20,
+                title: "National Bamboo Mission",
+                ministry: "Ministry of Agriculture and Farmers Welfare",
+                category: "forest",
+                image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=500&h=300&fit=crop",
+                description: "Mission to promote bamboo cultivation and strengthen the bamboo sector for economic and environmental benefits.",
+                fullDescription: "The National Bamboo Mission aims to promote holistic growth of bamboo sector by adopting area-based regionally differentiated strategy and to increase the area under bamboo cultivation and marketing.",
+                launchYear: "2018",
+                budget: "₹1,290 Crore",
+                status: "Active",
+                beneficiaries: "Bamboo Growers",
+                tags: ["Bamboo Cultivation", "Sustainable Agriculture", "Rural Economy", "Green Building"],
+                website: "https://nbm.nic.in/",
+                achievements: [
+                    "1.36 lakh hectares covered",
+                    "Enhanced bamboo productivity",
+                    "Improved farmer incomes",
+                    "Sustainable livelihood options"
+                ]
+            },
+            {
+                id: 21,
+                title: "National Biogas and Manure Management Programme",
+                ministry: "Ministry of New and Renewable Energy",
+                category: "waste",
+                image: "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=500&h=300&fit=crop",
+                description: "Programme to promote biogas plants for cooking fuel and organic manure production from agricultural and animal waste.",
+                fullDescription: "The programme aims to provide clean cooking fuel and enriched organic manure to rural households by setting up biogas plants that utilize cattle dung, agricultural residue and kitchen waste.",
+                launchYear: "1982",
+                budget: "₹2,000 Crore",
+                status: "Active",
+                beneficiaries: "Rural Households",
+                tags: ["Biogas", "Rural Energy", "Organic Farming", "Waste Utilization"],
+                website: "https://mnre.gov.in/",
+                achievements: [
+                    "51 lakh biogas plants installed",
+                    "Clean cooking fuel for rural areas",
+                    "Organic manure production",
+                    "Reduced biomass burning"
+                ]
+            },
+            {
+                id: 22,
+                title: "National Mission for Enhanced Energy Efficiency",
+                ministry: "Ministry of Power",
+                category: "renewable",
+                image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
+                description: "Mission to promote energy efficiency across all sectors of the economy through policy frameworks and market mechanisms.",
+                fullDescription: "NMEEE aims to strengthen the market for energy efficiency by creating conducive regulatory and policy regime and has envisaged fostering innovative and sustainable business models to unlock market potential.",
+                launchYear: "2010",
+                budget: "₹5,000 Crore",
+                status: "Active",
+                beneficiaries: "All Economic Sectors",
+                tags: ["Energy Efficiency", "Market Mechanisms", "Policy Framework", "Sustainable Business"],
+                website: "https://beeindia.gov.in/",
+                achievements: [
+                    "74 million tonne CO2 reduction",
+                    "₹2.4 lakh crore investment mobilized",
+                    "23% reduction in energy intensity",
+                    "Enhanced energy security"
+                ]
+            },
+            {
+                id: 23,
+                title: "Plastic Waste Management Rules",
+                ministry: "Ministry of Environment, Forest and Climate Change",
+                category: "waste",
+                image: "https://images.unsplash.com/photo-1610222908-c8e4e5d90c53?w=500&h=300&fit=crop",
+                description: "Comprehensive rules for plastic waste management including extended producer responsibility and circular economy principles.",
+                fullDescription: "The Plastic Waste Management Rules provide a framework for management of plastic waste in the country through extended producer responsibility, waste collection systems, and promoting circular economy principles.",
+                launchYear: "2016",
+                budget: "Implementation Based",
+                status: "Active",
+                beneficiaries: "Urban and Rural Areas",
+                tags: ["Plastic Management", "Circular Economy", "Producer Responsibility", "Waste Reduction"],
+                website: "https://cpcb.nic.in/",
+                achievements: [
+                    "60% plastic waste collection efficiency",
+                    "Extended producer responsibility implemented",
+                    "Reduced single-use plastics",
+                    "Enhanced recycling capacity"
+                ]
+            },
+            {
+                id: 24,
+                title: "National Action Plan on Climate Change",
+                ministry: "Prime Minister's Office",
+                category: "forest",
+                image: "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e5?w=500&h=300&fit=crop",
+                description: "Comprehensive plan outlining India's strategy to address climate change through eight national missions.",
+                fullDescription: "NAPCC outlines India's strategy to address climate change and identifies measures that promote development objectives while also yielding co-benefits for addressing climate change effectively.",
+                launchYear: "2008",
+                budget: "₹2,50,000 Crore",
+                status: "Active",
+                beneficiaries: "Entire Nation",
+                tags: ["Climate Strategy", "National Missions", "Sustainable Development", "Climate Adaptation"],
+                website: "https://climatechange.gov.in/",
+                achievements: [
+                    "8 national missions launched",
+                    "33% renewable energy capacity",
+                    "2.6 billion tonnes CO2 equivalent reduction",
+                    "Enhanced climate resilience"
+                ]
+            },
+            {
+                id: 25,
+                title: "Bio-Medical Waste Management Rules",
+                ministry: "Ministry of Environment, Forest and Climate Change",
+                category: "waste",
+                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=300&fit=crop",
+                description: "Rules for proper segregation, treatment, and disposal of biomedical waste to protect public health and environment.",
+                fullDescription: "The Bio-Medical Waste Management Rules provide guidelines for proper segregation, treatment, and disposal of biomedical waste generated from healthcare facilities to minimize health and environmental risks.",
+                launchYear: "2016",
+                budget: "Implementation Based",
+                status: "Active",
+                beneficiaries: "Healthcare Sector",
+                tags: ["Healthcare Waste", "Public Health", "Environmental Safety", "Waste Treatment"],
+                website: "https://cpcb.nic.in/",
+                achievements: [
+                    "15,000+ healthcare facilities covered",
+                    "Improved waste segregation",
+                    "Enhanced treatment capacity",
+                    "Reduced environmental contamination"
+                ]
+            }
+        ];
+
+        let filteredPrograms = [...ecoPrograms];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayPrograms(ecoPrograms);
+        });
+
+        // Display programs in grid
+        function displayPrograms(programs) {
+            const programsGrid = document.getElementById('programsGrid');
+            programsGrid.innerHTML = '';
+
+            programs.forEach(program => {
+                const programCard = createProgramCard(program);
+                programsGrid.appendChild(programCard);
+            });
+
+            // Add animation
+            gsap.from('.program-card', {
+                duration: 0.6,
+                y: 50,
+                opacity: 0,
+                stagger: 0.1,
+                ease: "power2.out"
+            });
+        }
+
+        // Create program card element
+        function createProgramCard(program) {
+            const card = document.createElement('div');
+            card.className = 'program-card fade-in';
+            card.onclick = () => openProgramModal(program);
+
+            card.innerHTML = `
+                <img src="${program.image}" alt="${program.title}" class="program-image">
+                <div class="program-content">
+                    <h3 class="program-title">${program.title}</h3>
+                    <p class="program-ministry">${program.ministry}</p>
+                    <p class="program-description">${program.description}</p>
+                    
+                    <div class="program-tags">
+                        ${program.tags.map(tag => `<span class="program-tag">${tag}</span>`).join('')}
+                    </div>
+                    
+                    <div class="program-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Launch Year</div>
+                            <div class="detail-value">${program.launchYear}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">${program.status}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Budget</div>
+                            <div class="detail-value">${program.budget}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Beneficiaries</div>
+                            <div class="detail-value">${program.beneficiaries}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="program-actions">
+                        <button class="action-btn btn-primary" onclick="event.stopPropagation(); openProgramModal(${program.id})">
+                            📋 View Details
+                        </button>
+                        <a href="${program.website}" target="_blank" class="action-btn btn-secondary" onclick="event.stopPropagation()">
+                            🌐 Official Site
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Filter programs by category
+        function filterPrograms(category) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter programs
+            if (category === 'all') {
+                filteredPrograms = [...ecoPrograms];
+            } else {
+                filteredPrograms = ecoPrograms.filter(program => program.category === category);
+            }
+
+            displayPrograms(filteredPrograms);
+        }
+
+        // Search programs
+        function searchPrograms() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            const searchResults = filteredPrograms.filter(program =>
+                program.title.toLowerCase().includes(searchTerm) ||
+                program.description.toLowerCase().includes(searchTerm) ||
+                program.ministry.toLowerCase().includes(searchTerm) ||
+                program.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+
+            displayPrograms(searchResults);
+        }
+
+        // Open program details modal
+        function openProgramModal(programId) {
+            const program = typeof programId === 'object' ? programId : ecoPrograms.find(p => p.id === programId);
+            
+            if (!program) return;
+
+            // Populate modal content
+            document.getElementById('modalImage').src = program.image;
+            document.getElementById('modalTitle').textContent = program.title;
+            document.getElementById('modalDescription').innerHTML = `
+                <p><strong>Ministry:</strong> ${program.ministry}</p>
+                <p><strong>Launch Year:</strong> ${program.launchYear}</p>
+                <p><strong>Budget:</strong> ${program.budget}</p>
+                <p><strong>Status:</strong> ${program.status}</p>
+                <p><strong>Beneficiaries:</strong> ${program.beneficiaries}</p>
+                <br>
+                <p>${program.fullDescription}</p>
+            `;
+
+            // Create info grid
+            const infoGrid = document.getElementById('modalInfoGrid');
+            infoGrid.innerHTML = `
+                <div class="modal-info-item">
+                    <h4>🎯 Key Achievements</h4>
+                    <ul>
+                        ${program.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="modal-info-item">
+                    <h4>🏷️ Program Tags</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                        ${program.tags.map(tag => `<span class="program-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="modal-info-item">
+                    <h4>🔗 Official Website</h4>
+                    <a href="${program.website}" target="_blank" style="color: #27ae60; text-decoration: none;">
+                        Visit Official Site →
+                    </a>
+                </div>
+            `;
+
+            // Show modal
+            document.getElementById('programModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('programModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on outside click
+        document.getElementById('programModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add GSAP animations for smooth transitions
+        if (typeof gsap !== 'undefined') {
+            // Animate header on page load
+            gsap.from('.page-title', {
+                duration: 1,
+                y: 50,
+                opacity: 0,
+                ease: "power2.out"
+            });
+
+            gsap.from('.page-subtitle', {
+                duration: 1,
+                y: 30,
+                opacity: 0,
+                delay: 0.3,
+                ease: "power2.out"
+            });
+
+            gsap.from('.stat-card', {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                stagger: 0.1,
+                delay: 0.6,
+                ease: "power2.out"
+            });
+
+            gsap.from('.filter-btn', {
+                duration: 0.6,
+                y: 30,
+                opacity: 0,
+                stagger: 0.05,
+                delay: 1,
+                ease: "power2.out"
+            });
+        }
+    </script>
+
+    <!-- GSAP Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</body>
+</html>

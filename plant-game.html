@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFootprint - PlantVerse Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            padding-top: 80px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .game-title {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 2rem;
+        }
+
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .game-world {
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 50%, #90EE90 100%);
+            border-radius: 20px;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 3px solid #27ae60;
+            cursor: crosshair;
+            transition: all 0.3s ease;
+        }
+
+        .game-world:hover {
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, #8B4513, #D2691E);
+            border-radius: 0 0 17px 17px;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 100px;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            animation: treeGrow 0.8s ease-out;
+        }
+
+        @keyframes treeGrow {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .tree-trunk {
+            width: 8px;
+            height: 30px;
+            background: #8B4513;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        .tree-leaves {
+            width: 25px;
+            height: 25px;
+            background: #228B22;
+            border-radius: 50%;
+            margin: -10px auto 0;
+            position: relative;
+        }
+
+        .tree-leaves::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #32CD32;
+            border-radius: 50%;
+            top: -8px;
+            left: -5px;
+        }
+
+        .tree-leaves::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #32CD32;
+            border-radius: 50%;
+            top: -8px;
+            right: -5px;
+        }
+
+        .tree:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .sapling {
+            position: absolute;
+            bottom: 100px;
+            width: 15px;
+            height: 20px;
+            background: #90EE90;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: saplingGrow 0.6s ease-out;
+        }
+
+        @keyframes saplingGrow {
+            0% {
+                transform: scale(0) translateY(10px);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .sapling::before {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 8px;
+            background: #8B4513;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .sapling:hover {
+            transform: scale(1.2);
+            filter: brightness(1.3);
+        }
+
+        .seed {
+            position: absolute;
+            bottom: 95px;
+            width: 8px;
+            height: 8px;
+            background: #8B4513;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: seedPlant 0.4s ease-out;
+        }
+
+        @keyframes seedPlant {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
+        }
+
+        .seed:hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.7);
+        }
+
+        .particle-effect {
+            position: absolute;
+            pointer-events: none;
+            font-size: 20px;
+            animation: particleFloat 2s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(1.5);
+            }
+        }
+
+        .growth-ring {
+            position: absolute;
+            border: 2px solid #27ae60;
+            border-radius: 50%;
+            animation: growthRing 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes growthRing {
+            0% {
+                width: 20px;
+                height: 20px;
+                opacity: 0.8;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                width: 80px;
+                height: 80px;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+        }
+
+        .cloud1 {
+            width: 60px;
+            height: 20px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .cloud1::before {
+            top: -10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .cloud1::after {
+            top: -5px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .cloud2 {
+            width: 80px;
+            height: 25px;
+            top: 15%;
+            right: 15%;
+            animation-delay: -2s;
+        }
+
+        .cloud2::before {
+            top: -15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+        }
+
+        .cloud2::after {
+            top: -8px;
+            right: 15px;
+            width: 25px;
+            height: 25px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .sun {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        .sun::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.3;
+            }
+        }
+
+        .game-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .control-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .control-btn.selected {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+        }
+
+        .achievements {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .achievements h3 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .achievement-card {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card.unlocked {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .level-up-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 2000;
+            animation: levelUpBounce 2s ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes levelUpBounce {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .tutorial {
+            background: rgba(52, 152, 219, 0.1);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tutorial h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .tutorial-steps {
+            list-style: none;
+        }
+
+        .tutorial-steps li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .tutorial-steps li::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #3498db;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .tutorial-steps {
+            counter-reset: step-counter;
+        }
+
+        .weather-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 17px;
+            overflow: hidden;
+        }
+
+        .rain {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background: linear-gradient(to bottom, rgba(173, 216, 230, 0.8), transparent);
+            animation: rainfall 1s linear infinite;
+        }
+
+        @keyframes rainfall {
+            from {
+                transform: translateY(-20px);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(520px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .game-world {
+                height: 400px;
+            }
+
+            .game-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .achievement-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">🎮 PlantVerse</a>
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </nav>
+
+    <div class="game-container">
+        <!-- Game Header -->
+        <div class="game-header">
+            <h1 class="game-title">🌱 PlantVerse: The Tree Planting Game</h1>
+            <p class="game-subtitle">Grow your virtual forest and learn about environmental conservation!</p>
+        </div>
+
+        <!-- Game Stats -->
+        <div class="game-stats">
+            <div class="stat-box">
+                <div class="stat-number" id="seedCount">5</div>
+                <div class="stat-label">Seeds</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="saplingCount">0</div>
+                <div class="stat-label">Saplings</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="treeCount">0</div>
+                <div class="stat-label">Mature Trees</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="co2Absorbed">0</div>
+                <div class="stat-label">CO₂ Absorbed (kg)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="gameLevel">1</div>
+                <div class="stat-label">Level</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="gameScore">0</div>
+                <div class="stat-label">Eco Score</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="streakCount">0</div>
+                <div class="stat-label">Daily Streak</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="multiplier">1x</div>
+                <div class="stat-label">Score Multiplier</div>
+            </div>
+        </div>
+
+        <!-- Tutorial -->
+        <div class="tutorial" id="tutorial">
+            <h3>🎓 How to Play PlantVerse</h3>
+            <ol class="tutorial-steps">
+                <li>Click "Plant Seed" and then click anywhere in the forest to plant a seed</li>
+                <li>Wait for seeds to grow into saplings (or use "Water Plants" to speed up growth)</li>
+                <li>Saplings will automatically grow into mature trees over time</li>
+                <li>Mature trees absorb CO₂ and generate Eco Score points</li>
+                <li>Use "Create Rain" to help all plants grow faster</li>
+                <li>Earn achievements and level up by growing your forest!</li>
+            </ol>
+        </div>
+
+        <!-- Game World -->
+        <div class="game-world" id="gameWorld">
+            <!-- Sky elements -->
+            <div class="sun"></div>
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            
+            <!-- Weather effects container -->
+            <div class="weather-effects" id="weatherEffects"></div>
+            
+            <!-- Ground -->
+            <div class="ground"></div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="game-controls">
+            <button class="control-btn" id="plantSeedBtn" onclick="selectTool('seed')">
+                🌰 Plant Seed (Cost: 1 seed)
+            </button>
+            <button class="control-btn" onclick="waterPlants()">
+                💧 Water Plants (Speed up growth)
+            </button>
+            <button class="control-btn" onclick="createRain()">
+                🌧️ Create Rain (Boost all plants)
+            </button>
+            <button class="control-btn" onclick="harvestSeeds()">
+                🌿 Harvest Seeds (Get more seeds)
+            </button>
+            <button class="control-btn" onclick="buySeeds()">
+                🛒 Buy Seeds (Cost: 50 points)
+            </button>
+            <button class="control-btn" onclick="activateBooster()">
+                ⚡ Growth Booster (2x growth for 30s)
+            </button>
+            <button class="control-btn" onclick="plantSpecialTree()">
+                🌲 Plant Special Tree (Cost: 100 points)
+            </button>
+            <button class="control-btn" onclick="clearForest()">
+                🗑️ Clear Forest (Reset game)
+            </button>
+        </div>
+
+        <!-- Achievements -->
+        <div class="achievements">
+            <h3>🏆 Achievements</h3>
+            <div class="achievement-grid" id="achievementGrid">
+                <div class="achievement-card" data-achievement="firstSeed">
+                    <div class="achievement-icon">🌱</div>
+                    <div class="achievement-title">First Seed</div>
+                    <div class="achievement-desc">Plant your first seed</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="firstTree">
+                    <div class="achievement-icon">🌳</div>
+                    <div class="achievement-title">First Tree</div>
+                    <div class="achievement-desc">Grow your first mature tree</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="forest10">
+                    <div class="achievement-icon">🌲</div>
+                    <div class="achievement-title">Small Forest</div>
+                    <div class="achievement-desc">Grow 10 trees</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="ecoWarrior">
+                    <div class="achievement-icon">🌍</div>
+                    <div class="achievement-title">Eco Warrior</div>
+                    <div class="achievement-desc">Absorb 100kg of CO₂</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="rainMaker">
+                    <div class="achievement-icon">⛈️</div>
+                    <div class="achievement-title">Rain Maker</div>
+                    <div class="achievement-desc">Create rain 5 times</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="speedDemon">
+                    <div class="achievement-icon">💨</div>
+                    <div class="achievement-title">Speed Demon</div>
+                    <div class="achievement-desc">Use growth booster 10 times</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="forestMaster">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-title">Forest Master</div>
+                    <div class="achievement-desc">Grow 50 trees</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="achievement-card" data-achievement="streakMaster">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-title">Streak Master</div>
+                    <div class="achievement-desc">Maintain a 7-day streak</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameData = JSON.parse(localStorage.getItem('plantVerseGame')) || {
+            seeds: 5,
+            saplings: 0,
+            trees: 0,
+            co2Absorbed: 0,
+            level: 1,
+            score: 0,
+            plants: [],
+            achievements: [],
+            rainCount: 0,
+            plantId: 0,
+            boosterCount: 0,
+            boosterActive: false,
+            boosterEndTime: 0,
+            multiplier: 1,
+            lastPlayDate: null,
+            streak: 0,
+            specialTrees: 0
+        };
+
+        let selectedTool = null;
+        let gameInterval;
+        let soundEnabled = true;
+
+        // Sound effects (using Web Audio API for better performance)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration, type = 'sine') {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check daily streak
+            checkDailyStreak();
+            
+            updateStats();
+            updateAchievements();
+            loadPlantsFromSave();
+            startGameLoop();
+            
+            // Add click listener to game world
+            document.getElementById('gameWorld').addEventListener('click', handleWorldClick);
+            
+            // Start audio context on first user interaction
+            document.addEventListener('click', () => {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }, { once: true });
+        });
+
+        function checkDailyStreak() {
+            const today = new Date().toDateString();
+            const lastPlay = gameData.lastPlayDate;
+            
+            if (lastPlay) {
+                const lastPlayDate = new Date(lastPlay);
+                const todayDate = new Date(today);
+                const diffTime = todayDate - lastPlayDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    // Consecutive day
+                    gameData.streak++;
+                    gameData.multiplier = Math.min(5, 1 + Math.floor(gameData.streak / 3) * 0.5);
+                    showGlobalEffect(`🔥 Daily streak: ${gameData.streak} days! Multiplier: ${gameData.multiplier}x`);
+                } else if (diffDays > 1) {
+                    // Streak broken
+                    gameData.streak = 1;
+                    gameData.multiplier = 1;
+                    showGlobalEffect('New day, new forest! 🌱');
+                }
+            } else {
+                // First time playing
+                gameData.streak = 1;
+                gameData.multiplier = 1;
+            }
+            
+            gameData.lastPlayDate = today;
+            saveGame();
+        }
+
+        function updateStats() {
+            document.getElementById('seedCount').textContent = gameData.seeds;
+            document.getElementById('saplingCount').textContent = gameData.saplings;
+            document.getElementById('treeCount').textContent = gameData.trees;
+            document.getElementById('co2Absorbed').textContent = gameData.co2Absorbed;
+            document.getElementById('gameLevel').textContent = gameData.level;
+            document.getElementById('gameScore').textContent = gameData.score;
+            document.getElementById('streakCount').textContent = gameData.streak;
+            document.getElementById('multiplier').textContent = gameData.multiplier + 'x';
+        }
+
+        function selectTool(tool) {
+            // Remove selected class from all buttons
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            if (tool === 'seed' && gameData.seeds > 0) {
+                selectedTool = tool;
+                document.getElementById('plantSeedBtn').classList.add('selected');
+                document.getElementById('gameWorld').style.cursor = 'crosshair';
+            } else if (tool === 'seed' && gameData.seeds === 0) {
+                alert('You need seeds to plant! Try harvesting or buying seeds.');
+                selectedTool = null;
+                document.getElementById('gameWorld').style.cursor = 'default';
+            }
+        }
+
+        function handleWorldClick(event) {
+            if (selectedTool === 'seed') {
+                plantSeed(event);
+            }
+        }
+
+        function plantSeed(event) {
+            if (gameData.seeds <= 0) {
+                alert('No seeds left! Harvest or buy more seeds.');
+                playSound(200, 0.2);
+                return;
+            }
+
+            const rect = document.getElementById('gameWorld').getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Don't plant too close to edges or too high
+            if (x < 30 || x > rect.width - 30 || y < 50 || y > rect.height - 120) {
+                playSound(150, 0.3);
+                return;
+            }
+
+            // Check if there's already a plant too close
+            const tooClose = gameData.plants.some(plant => {
+                const distance = Math.sqrt(Math.pow(plant.x - x, 2) + Math.pow(plant.y - y, 2));
+                return distance < 40;
+            });
+
+            if (tooClose) {
+                alert('Plants need space to grow! Plant further away.');
+                playSound(200, 0.2);
+                return;
+            }
+
+            // Create new plant
+            const plant = {
+                id: gameData.plantId++,
+                x: x,
+                y: y,
+                stage: 'seed',
+                age: 0,
+                growthTime: 80 + Math.random() * 40, // 8-12 seconds (faster)
+                co2Production: 0,
+                isSpecial: false
+            };
+
+            gameData.plants.push(plant);
+            gameData.seeds--;
+
+            // Create visual element
+            createPlantElement(plant);
+
+            // Visual and audio feedback
+            createParticleEffect(x, y, '🌱');
+            playSound(440, 0.3, 'triangle');
+
+            // Update stats and check achievements
+            updateStats();
+            checkAchievement('firstSeed', 1);
+            saveGame();
+
+            // Reset tool selection
+            selectedTool = null;
+            document.getElementById('plantSeedBtn').classList.remove('selected');
+            document.getElementById('gameWorld').style.cursor = 'default';
+        }
+
+        function createPlantElement(plant) {
+            const plantElement = document.createElement('div');
+            plantElement.id = `plant-${plant.id}`;
+            plantElement.style.position = 'absolute';
+            plantElement.style.left = plant.x + 'px';
+            plantElement.style.bottom = (100 + plant.y) + 'px';
+            plantElement.style.transition = 'all 0.5s ease';
+
+            updatePlantVisual(plantElement, plant);
+            document.getElementById('gameWorld').appendChild(plantElement);
+        }
+
+        function updatePlantVisual(element, plant) {
+            element.className = plant.stage + (plant.isSpecial ? ' special' : '');
+            element.onclick = () => plantClick(plant);
+
+            if (plant.stage === 'seed') {
+                element.innerHTML = '';
+                element.style.width = '8px';
+                element.style.height = '8px';
+                element.style.background = plant.isSpecial ? '#FFD700' : '#8B4513';
+                element.style.borderRadius = '50%';
+                element.style.boxShadow = plant.isSpecial ? '0 0 8px #FFD700' : 'none';
+            } else if (plant.stage === 'sapling') {
+                element.innerHTML = '<div style="position: absolute; width: 3px; height: 8px; background: #8B4513; bottom: -8px; left: 50%; transform: translateX(-50%); border-radius: 2px;"></div>';
+                element.style.width = '15px';
+                element.style.height = '20px';
+                element.style.background = plant.isSpecial ? '#98FB98' : '#90EE90';
+                element.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%';
+                element.style.filter = plant.isSpecial ? 'brightness(1.3) drop-shadow(0 0 5px #90EE90)' : 'none';
+            } else if (plant.stage === 'tree') {
+                const leafColor = plant.isSpecial ? '#32CD32' : '#228B22';
+                const accentColor = plant.isSpecial ? '#7FFF00' : '#32CD32';
+                element.innerHTML = `
+                    <div style="width: 8px; height: 30px; background: #8B4513; margin: 0 auto; border-radius: 4px;"></div>
+                    <div style="width: 25px; height: 25px; background: ${leafColor}; border-radius: 50%; margin: -10px auto 0; position: relative;">
+                        <div style="position: absolute; width: 20px; height: 20px; background: ${accentColor}; border-radius: 50%; top: -8px; left: -5px;"></div>
+                        <div style="position: absolute; width: 20px; height: 20px; background: ${accentColor}; border-radius: 50%; top: -8px; right: -5px;"></div>
+                    </div>
+                `;
+                element.style.width = '35px';
+                element.style.height = '55px';
+                element.style.background = 'transparent';
+                element.style.borderRadius = '0';
+                element.style.filter = plant.isSpecial ? 'drop-shadow(0 0 10px #32CD32)' : 'none';
+            }
+        }
+
+        function plantClick(plant) {
+            if (plant.stage === 'tree') {
+                // Tree interaction - get bonus points
+                const basePoints = plant.isSpecial ? 25 : 10;
+                const points = Math.floor(basePoints * gameData.multiplier);
+                gameData.score += points;
+                updateStats();
+                showFloatingText(plant.x, plant.y, `+${points} 🌟`);
+                createParticleEffect(plant.x, plant.y, '✨');
+                playSound(660, 0.2, 'sine');
+            } else if (plant.stage === 'sapling') {
+                // Sapling interaction - speed up growth
+                plant.age += 30;
+                showFloatingText(plant.x, plant.y, 'Growth Boost! 🌱');
+                createGrowthRing(plant.x, plant.y);
+                playSound(523, 0.3, 'triangle');
+            } else if (plant.stage === 'seed') {
+                // Seed interaction - small growth boost
+                plant.age += 15;
+                showFloatingText(plant.x, plant.y, 'Sprout! 🌰');
+                playSound(349, 0.2, 'square');
+            }
+        }
+
+        function waterPlants() {
+            if (gameData.plants.length === 0) {
+                alert('Plant some seeds first!');
+                playSound(200, 0.3);
+                return;
+            }
+
+            // Speed up growth for all plants
+            gameData.plants.forEach(plant => {
+                if (plant.stage !== 'tree') {
+                    plant.age += 40;
+                    createParticleEffect(plant.x, plant.y, '💧');
+                }
+            });
+
+            gameData.score += Math.floor(8 * gameData.multiplier);
+            updateStats();
+            saveGame();
+            playSound(784, 0.4, 'sine');
+
+            // Visual effect
+            showGlobalEffect('💧 All plants watered!');
+        }
+
+        function createRain() {
+            // Create rain effect
+            const weatherEffects = document.getElementById('weatherEffects');
+            weatherEffects.innerHTML = '';
+
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    const raindrop = document.createElement('div');
+                    raindrop.className = 'rain';
+                    raindrop.style.left = Math.random() * 100 + '%';
+                    raindrop.style.animationDelay = Math.random() * 1 + 's';
+                    weatherEffects.appendChild(raindrop);
+
+                    setTimeout(() => {
+                        if (raindrop.parentNode) {
+                            raindrop.parentNode.removeChild(raindrop);
+                        }
+                    }, 1000);
+                }, i * 15);
+            }
+
+            // Boost all plants
+            gameData.plants.forEach(plant => {
+                if (plant.stage !== 'tree') {
+                    plant.age += 60;
+                }
+                createParticleEffect(plant.x, plant.y, '🌧️');
+            });
+
+            gameData.rainCount++;
+            gameData.score += Math.floor(20 * gameData.multiplier);
+            updateStats();
+            checkAchievement('rainMaker', gameData.rainCount);
+            saveGame();
+            playSound(440, 1.0, 'sine');
+
+            showGlobalEffect('🌧️ Rain is nourishing your forest!');
+        }
+
+        function activateBooster() {
+            if (gameData.boosterActive) {
+                alert('Growth booster is already active!');
+                return;
+            }
+
+            gameData.boosterActive = true;
+            gameData.boosterEndTime = Date.now() + 30000; // 30 seconds
+            gameData.boosterCount++;
+
+            // Visual feedback
+            document.getElementById('gameWorld').style.filter = 'brightness(1.2) contrast(1.1)';
+            showGlobalEffect('⚡ Growth Booster Activated! 2x growth speed for 30 seconds!');
+            checkAchievement('speedDemon', gameData.boosterCount);
+            playSound(880, 0.5, 'sawtooth');
+
+            // Auto-deactivate after 30 seconds
+            setTimeout(() => {
+                gameData.boosterActive = false;
+                document.getElementById('gameWorld').style.filter = 'none';
+                showGlobalEffect('⚡ Growth Booster expired');
+            }, 30000);
+        }
+
+        function plantSpecialTree() {
+            if (gameData.score < 100) {
+                alert('You need 100 points to plant a special tree!');
+                playSound(200, 0.3);
+                return;
+            }
+
+            // Find empty spot
+            const gameWorld = document.getElementById('gameWorld');
+            const rect = gameWorld.getBoundingClientRect();
+            let attempts = 0;
+            let planted = false;
+
+            while (attempts < 20 && !planted) {
+                const x = 50 + Math.random() * (rect.width - 100);
+                const y = 100 + Math.random() * (rect.height - 200);
+
+                const tooClose = gameData.plants.some(plant => {
+                    const distance = Math.sqrt(Math.pow(plant.x - x, 2) + Math.pow(plant.y - y, 2));
+                    return distance < 50;
+                });
+
+                if (!tooClose) {
+                    const plant = {
+                        id: gameData.plantId++,
+                        x: x,
+                        y: y,
+                        stage: 'tree',
+                        age: 0,
+                        growthTime: 0,
+                        co2Production: 3, // Special trees produce more CO2
+                        isSpecial: true
+                    };
+
+                    gameData.plants.push(plant);
+                    gameData.trees++;
+                    gameData.specialTrees++;
+                    gameData.score -= 100;
+
+                    createPlantElement(plant);
+                    createParticleEffect(x, y, '🌟');
+                    updateStats();
+                    saveGame();
+                    playSound(1047, 0.8, 'sine');
+                    showGlobalEffect('🌲 Special tree planted! +3 CO₂ absorption per cycle!');
+                    planted = true;
+                }
+                attempts++;
+            }
+
+            if (!planted) {
+                alert('No space for special tree! Clear some area first.');
+                playSound(200, 0.3);
+            }
+        }
+
+        function harvestSeeds() {
+            const matureTrees = gameData.plants.filter(plant => plant.stage === 'tree').length;
+            
+            if (matureTrees === 0) {
+                alert('You need mature trees to harvest seeds!');
+                playSound(200, 0.3);
+                return;
+            }
+
+            const newSeeds = matureTrees * 3; // More seeds per tree
+            gameData.seeds += newSeeds;
+            gameData.score += Math.floor(newSeeds * 3 * gameData.multiplier);
+            
+            // Visual feedback for each tree
+            gameData.plants.forEach(plant => {
+                if (plant.stage === 'tree') {
+                    createParticleEffect(plant.x, plant.y, '🌿');
+                }
+            });
+            
+            updateStats();
+            saveGame();
+            playSound(698, 0.6, 'triangle');
+            
+            showGlobalEffect(`🌿 Harvested ${newSeeds} seeds from ${matureTrees} trees!`);
+        }
+
+        function buySeeds() {
+            if (gameData.score < 50) {
+                alert('You need 50 points to buy seeds!');
+                playSound(200, 0.3);
+                return;
+            }
+
+            gameData.score -= 50;
+            gameData.seeds += 8; // More seeds for the price
+            
+            updateStats();
+            saveGame();
+            playSound(587, 0.4, 'square');
+            
+            showGlobalEffect('🛒 Bought 8 seeds for 50 points!');
+        }
+
+        function clearForest() {
+            if (confirm('Are you sure you want to clear your forest? This will reset your progress!')) {
+                gameData.plants = [];
+                gameData.seeds = 5;
+                gameData.saplings = 0;
+                gameData.trees = 0;
+                gameData.co2Absorbed = 0;
+                gameData.score = 0;
+                gameData.level = 1;
+                gameData.plantId = 0;
+
+                // Clear visual elements
+                const gameWorld = document.getElementById('gameWorld');
+                gameWorld.querySelectorAll('[id^="plant-"]').forEach(element => {
+                    element.remove();
+                });
+
+                updateStats();
+                saveGame();
+                showGlobalEffect('🗑️ Forest cleared! Starting fresh...');
+            }
+        }
+
+        function startGameLoop() {
+            gameInterval = setInterval(() => {
+                let plantsChanged = false;
+                let newTrees = 0;
+                const growthMultiplier = gameData.boosterActive ? 2 : 1;
+
+                gameData.plants.forEach(plant => {
+                    plant.age += growthMultiplier;
+
+                    if (plant.stage === 'seed' && plant.age >= plant.growthTime) {
+                        plant.stage = 'sapling';
+                        plant.growthTime = 120 + Math.random() * 40; // 12-16 seconds
+                        plant.age = 0;
+                        plantsChanged = true;
+                        gameData.saplings++;
+                        createGrowthRing(plant.x, plant.y);
+                        playSound(523, 0.2, 'triangle');
+                    } else if (plant.stage === 'sapling' && plant.age >= plant.growthTime) {
+                        plant.stage = 'tree';
+                        plant.co2Production = plant.isSpecial ? 3 : 1;
+                        plant.age = 0;
+                        plantsChanged = true;
+                        gameData.saplings--;
+                        gameData.trees++;
+                        newTrees++;
+                        createParticleEffect(plant.x, plant.y, plant.isSpecial ? '🌟' : '🌳');
+                        playSound(659, 0.4, 'sine');
+                    } else if (plant.stage === 'tree') {
+                        // Trees produce CO2 absorption and points
+                        gameData.co2Absorbed += plant.co2Production;
+                        gameData.score += Math.floor(plant.co2Production * gameData.multiplier);
+                    }
+                });
+
+                // Update visuals if plants changed
+                if (plantsChanged) {
+                    gameData.plants.forEach(plant => {
+                        const element = document.getElementById(`plant-${plant.id}`);
+                        if (element) {
+                            updatePlantVisual(element, plant);
+                        }
+                    });
+                }
+
+                // Check for new trees achievement
+                if (newTrees > 0) {
+                    checkAchievement('firstTree', gameData.trees);
+                    checkAchievement('forest10', gameData.trees);
+                    checkAchievement('forestMaster', gameData.trees);
+                }
+
+                // Check level up
+                const newLevel = Math.floor(gameData.score / 150) + 1; // Slower level progression
+                if (newLevel > gameData.level) {
+                    gameData.level = newLevel;
+                    showLevelUp(newLevel);
+                    checkAchievement('levelMaster', gameData.level);
+                    playSound(1047, 1.0, 'sine');
+                }
+
+                // Check eco warrior achievement
+                checkAchievement('ecoWarrior', gameData.co2Absorbed);
+                checkAchievement('streakMaster', gameData.streak);
+
+                updateStats();
+                updateAchievements();
+                saveGame();
+            }, 100); // Update every 100ms for smooth gameplay
+        }
+
+        function checkAchievement(achievementId, currentValue) {
+            if (gameData.achievements.includes(achievementId)) {
+                return; // Already unlocked
+            }
+
+            const targets = {
+                firstSeed: 1,
+                firstTree: 1,
+                forest10: 10,
+                forestMaster: 50,
+                ecoWarrior: 100,
+                rainMaker: 5,
+                levelMaster: 10,
+                speedDemon: 10,
+                streakMaster: 7
+            };
+
+            if (currentValue >= targets[achievementId]) {
+                gameData.achievements.push(achievementId);
+                showAchievementUnlock(achievementId);
+                playSound(1319, 0.8, 'sine');
+            }
+        }
+
+        function updateAchievements() {
+            const achievements = document.querySelectorAll('.achievement-card');
+            achievements.forEach(card => {
+                const achievementId = card.getAttribute('data-achievement');
+                const isUnlocked = gameData.achievements.includes(achievementId);
+                
+                if (isUnlocked) {
+                    card.classList.add('unlocked');
+                    card.querySelector('.progress-fill').style.width = '100%';
+                } else {
+                    // Update progress
+                    const progress = getAchievementProgress(achievementId);
+                    card.querySelector('.progress-fill').style.width = progress + '%';
+                }
+            });
+        }
+
+        function getAchievementProgress(achievementId) {
+            const targets = {
+                firstSeed: { target: 1, current: gameData.plants.length > 0 ? 1 : 0 },
+                firstTree: { target: 1, current: gameData.trees > 0 ? 1 : 0 },
+                forest10: { target: 10, current: gameData.trees },
+                forestMaster: { target: 50, current: gameData.trees },
+                ecoWarrior: { target: 100, current: gameData.co2Absorbed },
+                rainMaker: { target: 5, current: gameData.rainCount },
+                levelMaster: { target: 10, current: gameData.level },
+                speedDemon: { target: 10, current: gameData.boosterCount },
+                streakMaster: { target: 7, current: gameData.streak }
+            };
+
+            const data = targets[achievementId];
+            return Math.min(100, (data.current / data.target) * 100);
+        }
+
+        function showLevelUp(level) {
+            const animation = document.createElement('div');
+            animation.className = 'level-up-animation';
+            animation.innerHTML = `
+                <h2>🎉 Level Up!</h2>
+                <p>You reached level ${level}!</p>
+                <p>Keep growing your forest!</p>
+            `;
+            document.body.appendChild(animation);
+
+            setTimeout(() => {
+                if (animation.parentNode) {
+                    animation.parentNode.removeChild(animation);
+                }
+            }, 2000);
+        }
+
+        function showAchievementUnlock(achievementId) {
+            const achievementNames = {
+                firstSeed: 'First Seed',
+                firstTree: 'First Tree',
+                forest10: 'Small Forest',
+                forestMaster: 'Forest Master',
+                ecoWarrior: 'Eco Warrior',
+                rainMaker: 'Rain Maker',
+                levelMaster: 'Level Master',
+                speedDemon: 'Speed Demon',
+                streakMaster: 'Streak Master'
+            };
+
+            showGlobalEffect(`🏆 Achievement Unlocked: ${achievementNames[achievementId]}!`);
+        }
+
+        function createParticleEffect(x, y, emoji) {
+            const particle = document.createElement('div');
+            particle.className = 'particle-effect';
+            particle.textContent = emoji;
+            particle.style.left = x + 'px';
+            particle.style.bottom = (100 + y + 20) + 'px';
+            
+            document.getElementById('gameWorld').appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 2000);
+        }
+
+        function createGrowthRing(x, y) {
+            const ring = document.createElement('div');
+            ring.className = 'growth-ring';
+            ring.style.left = x + 'px';
+            ring.style.bottom = (100 + y + 10) + 'px';
+            
+            document.getElementById('gameWorld').appendChild(ring);
+            
+            setTimeout(() => {
+                if (ring.parentNode) {
+                    ring.parentNode.removeChild(ring);
+                }
+            }, 1000);
+        }
+
+        function showFloatingText(x, y, text) {
+            const floatingText = document.createElement('div');
+            floatingText.style.position = 'absolute';
+            floatingText.style.left = x + 'px';
+            floatingText.style.bottom = (100 + y + 20) + 'px';
+            floatingText.style.color = '#27ae60';
+            floatingText.style.fontWeight = 'bold';
+            floatingText.style.fontSize = '14px';
+            floatingText.style.pointerEvents = 'none';
+            floatingText.style.animation = 'float 2s ease-out forwards';
+            floatingText.textContent = text;
+
+            document.getElementById('gameWorld').appendChild(floatingText);
+
+            setTimeout(() => {
+                if (floatingText.parentNode) {
+                    floatingText.parentNode.removeChild(floatingText);
+                }
+            }, 2000);
+        }
+
+        function showGlobalEffect(message) {
+            const effect = document.createElement('div');
+            effect.style.position = 'fixed';
+            effect.style.top = '120px';
+            effect.style.left = '50%';
+            effect.style.transform = 'translateX(-50%)';
+            effect.style.background = 'rgba(39, 174, 96, 0.9)';
+            effect.style.color = 'white';
+            effect.style.padding = '1rem 2rem';
+            effect.style.borderRadius = '10px';
+            effect.style.zIndex = '1500';
+            effect.style.animation = 'levelUpBounce 2s ease-in-out';
+            effect.textContent = message;
+
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                if (effect.parentNode) {
+                    effect.parentNode.removeChild(effect);
+                }
+            }, 2000);
+        }
+
+        function loadPlantsFromSave() {
+            gameData.plants.forEach(plant => {
+                createPlantElement(plant);
+            });
+        }
+
+        function saveGame() {
+            localStorage.setItem('plantVerseGame', JSON.stringify(gameData));
+        }
+
+        // Add floating animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                from {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-30px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', saveGame);
+    </script>
+</body>
+</html>

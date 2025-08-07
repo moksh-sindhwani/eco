@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFootprint - Donation & Rewards System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #cccccc;
+        }
+
+        .donation-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #27ae60;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .donation-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .donation-card {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+            border-color: #2ecc71;
+        }
+
+        .donation-card.selected {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.2);
+        }
+
+        .donation-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .donation-impact {
+            font-size: 1rem;
+            color: #cccccc;
+            margin-bottom: 1rem;
+        }
+
+        .donation-reward {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .reward-title {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .custom-donation {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed #27ae60;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .custom-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.2rem;
+            color: white;
+            width: 200px;
+            text-align: center;
+            margin: 1rem;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #2ecc71;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.3);
+        }
+
+        .donate-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border: none;
+            color: white;
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .donate-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .donate-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .rewards-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .reward-tier {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: black;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .tier-amount {
+            font-size: 2rem;
+            color: #ffd700;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .tier-benefits {
+            list-style: none;
+            text-align: left;
+        }
+
+        .tier-benefits li {
+            padding: 0.5rem 0;
+            color: #cccccc;
+        }
+
+        .tier-benefits li:before {
+            content: "✅ ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .leaderboard-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .leaderboard-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .donor-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .donor-rank {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: black;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .donor-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .donor-amount {
+            color: #27ae60;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            height: 30px;
+            border-radius: 15px;
+            margin: 2rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: white;
+            z-index: 10;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+            padding: 3rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            color: #333;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .donation-options {
+                grid-template-columns: 1fr;
+            }
+
+            .rewards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">🌱 EcoFootprint</a>
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </nav>
+
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💝 Donation & Rewards System</h1>
+            <p>Support environmental causes and earn exclusive rewards for your contributions to a greener planet</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalDonated">₹0</div>
+                <div class="stat-label">Total Donated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="treesPlanted">0</div>
+                <div class="stat-label">Trees Planted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="donorCount">0</div>
+                <div class="stat-label">Active Donors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="impactScore">0</div>
+                <div class="stat-label">Impact Score</div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <h2 class="section-title">🎯 Monthly Goal Progress</h2>
+            <p>Help us reach our goal of ₹50,000 this month to plant 1,000 trees!</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="monthlyProgress" style="width: 0%"></div>
+                <div class="progress-text" id="progressText">₹0 / ₹50,000</div>
+            </div>
+        </div>
+
+        <!-- Donation Section -->
+        <div class="donation-section">
+            <h2 class="section-title">💰 Make a Donation</h2>
+            
+            <div class="donation-options">
+                <div class="donation-card" onclick="selectDonation(100)" data-amount="100">
+                    <div class="donation-amount">₹100</div>
+                    <div class="donation-impact">Plants 2 saplings</div>
+                    <div class="donation-reward">
+                        <div class="reward-title">🏆 Rewards</div>
+                        <div>• Digital Certificate</div>
+                        <div>• Eco Badge</div>
+                    </div>
+                </div>
+
+                <div class="donation-card" onclick="selectDonation(500)" data-amount="500">
+                    <div class="donation-amount">₹500</div>
+                    <div class="donation-impact">Plants 10 saplings + 1 tree</div>
+                    <div class="donation-reward">
+                        <div class="reward-title">🏆 Rewards</div>
+                        <div>• Digital Certificate</div>
+                        <div>• Special Eco Badge</div>
+                        <div>• Progress Photo Updates</div>
+                    </div>
+                </div>
+
+                <div class="donation-card" onclick="selectDonation(1000)" data-amount="1000">
+                    <div class="donation-amount">₹1,000</div>
+                    <div class="donation-impact">Plants 20 saplings + 2 trees</div>
+                    <div class="donation-reward">
+                        <div class="reward-title">🏆 Rewards</div>
+                        <div>• Premium Certificate</div>
+                        <div>• Gold Eco Badge</div>
+                        <div>• Monthly Progress Reports</div>
+                        <div>• Exclusive Webinar Access</div>
+                    </div>
+                </div>
+
+                <div class="donation-card" onclick="selectDonation(2500)" data-amount="2500">
+                    <div class="donation-amount">₹2,500</div>
+                    <div class="donation-impact">Plants 50 saplings + 5 trees</div>
+                    <div class="donation-reward">
+                        <div class="reward-title">🏆 Rewards</div>
+                        <div>• VIP Certificate</div>
+                        <div>• Diamond Eco Badge</div>
+                        <div>• Named Tree Plaque</div>
+                        <div>• Quarterly Site Visits</div>
+                        <div>• Expert Consultation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="custom-donation">
+                <h3>🎨 Custom Amount</h3>
+                <p>Enter your preferred donation amount</p>
+                <input type="number" class="custom-input" id="customAmount" placeholder="₹" min="50" max="100000">
+                <button class="donate-btn" onclick="customDonation()">Donate Custom Amount</button>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="donate-btn" id="donateButton" onclick="processDonation()" disabled>
+                    Select an Amount to Donate
+                </button>
+            </div>
+        </div>
+
+        <!-- Rewards Tiers Section -->
+        <div class="rewards-section">
+            <h2 class="section-title">🏅 Reward Tiers</h2>
+            
+            <div class="rewards-grid">
+                <div class="reward-tier">
+                    <div class="tier-badge">🌱 Eco Supporter</div>
+                    <div class="tier-amount">₹100 - ₹499</div>
+                    <ul class="tier-benefits">
+                        <li>Digital Certificate of Appreciation</li>
+                        <li>Eco Supporter Badge</li>
+                        <li>Monthly Newsletter</li>
+                        <li>Access to Eco Tips</li>
+                    </ul>
+                </div>
+
+                <div class="reward-tier">
+                    <div class="tier-badge">🌳 Tree Guardian</div>
+                    <div class="tier-amount">₹500 - ₹999</div>
+                    <ul class="tier-benefits">
+                        <li>Premium Digital Certificate</li>
+                        <li>Tree Guardian Badge</li>
+                        <li>Progress Photo Updates</li>
+                        <li>Exclusive Webinar Access</li>
+                        <li>Carbon Footprint Report</li>
+                    </ul>
+                </div>
+
+                <div class="reward-tier">
+                    <div class="tier-badge">🏆 Eco Champion</div>
+                    <div class="tier-amount">₹1,000 - ₹2,499</div>
+                    <ul class="tier-benefits">
+                        <li>VIP Certificate with Your Name</li>
+                        <li>Gold Eco Champion Badge</li>
+                        <li>Named Tree/Sapling</li>
+                        <li>Quarterly Progress Reports</li>
+                        <li>Expert Environmental Consultation</li>
+                        <li>Priority Customer Support</li>
+                    </ul>
+                </div>
+
+                <div class="reward-tier">
+                    <div class="tier-badge">💎 Planet Protector</div>
+                    <div class="tier-amount">₹2,500+</div>
+                    <ul class="tier-benefits">
+                        <li>Personalized Certificate & Plaque</li>
+                        <li>Diamond Planet Protector Badge</li>
+                        <li>Named Grove Section</li>
+                        <li>Quarterly Site Visit Invitations</li>
+                        <li>One-on-One Expert Sessions</li>
+                        <li>Media Recognition</li>
+                        <li>Lifetime Membership Benefits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-section">
+            <h2 class="section-title">🏆 Top Donors Leaderboard</h2>
+            
+            <div class="leaderboard-list" id="leaderboardList">
+                <div class="leaderboard-item">
+                    <div class="donor-info">
+                        <div class="donor-rank">1</div>
+                        <div class="donor-name">Priya Sharma</div>
+                    </div>
+                    <div class="donor-amount">₹5,000</div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="donor-info">
+                        <div class="donor-rank">2</div>
+                        <div class="donor-name">Rahul Gupta</div>
+                    </div>
+                    <div class="donor-amount">₹3,500</div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="donor-info">
+                        <div class="donor-rank">3</div>
+                        <div class="donor-name">Anita Desai</div>
+                    </div>
+                    <div class="donor-amount">₹2,800</div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="donor-info">
+                        <div class="donor-rank">4</div>
+                        <div class="donor-name">Vikram Singh</div>
+                    </div>
+                    <div class="donor-amount">₹2,200</div>
+                </div>
+                
+                <div class="leaderboard-item">
+                    <div class="donor-info">
+                        <div class="donor-rank">5</div>
+                        <div class="donor-name">Meera Patel</div>
+                    </div>
+                    <div class="donor-amount">₹1,800</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2>🎉 Thank You for Your Donation!</h2>
+            <div id="donationDetails"></div>
+            <p>Your contribution will make a real difference in fighting climate change!</p>
+            <button class="donate-btn" onclick="closeModal()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedAmount = 0;
+        let donationData = JSON.parse(localStorage.getItem('donationData')) || {
+            totalDonated: 15300,
+            treesPlanted: 306,
+            donorCount: 43,
+            impactScore: 1250,
+            monthlyProgress: 15300,
+            donations: []
+        };
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            updateProgress();
+        });
+
+        function updateStats() {
+            document.getElementById('totalDonated').textContent = `₹${donationData.totalDonated.toLocaleString()}`;
+            document.getElementById('treesPlanted').textContent = donationData.treesPlanted.toLocaleString();
+            document.getElementById('donorCount').textContent = donationData.donorCount;
+            document.getElementById('impactScore').textContent = donationData.impactScore.toLocaleString();
+        }
+
+        function updateProgress() {
+            const goal = 50000;
+            const percentage = (donationData.monthlyProgress / goal) * 100;
+            document.getElementById('monthlyProgress').style.width = Math.min(percentage, 100) + '%';
+            document.getElementById('progressText').textContent = `₹${donationData.monthlyProgress.toLocaleString()} / ₹${goal.toLocaleString()}`;
+        }
+
+        function selectDonation(amount) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.donation-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            document.querySelector(`[data-amount="${amount}"]`).classList.add('selected');
+            
+            selectedAmount = amount;
+            
+            const donateButton = document.getElementById('donateButton');
+            donateButton.disabled = false;
+            donateButton.textContent = `Donate ₹${amount}`;
+        }
+
+        function customDonation() {
+            const customAmount = parseInt(document.getElementById('customAmount').value);
+            
+            if (!customAmount || customAmount < 50) {
+                alert('Please enter a valid amount (minimum ₹50)');
+                return;
+            }
+            
+            if (customAmount > 100000) {
+                alert('Maximum donation amount is ₹1,00,000. For larger donations, please contact us directly.');
+                return;
+            }
+            
+            // Remove selected class from preset cards
+            document.querySelectorAll('.donation-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            selectedAmount = customAmount;
+            
+            const donateButton = document.getElementById('donateButton');
+            donateButton.disabled = false;
+            donateButton.textContent = `Donate ₹${customAmount}`;
+        }
+
+        function processDonation() {
+            if (selectedAmount === 0) {
+                alert('Please select a donation amount first!');
+                return;
+            }
+
+            // Get user info
+            const userData = JSON.parse(localStorage.getItem('ecoFootprintUser'));
+            const donorName = userData ? userData.name : 'Anonymous Donor';
+
+            // Simulate payment processing
+            const donationId = 'DN' + Date.now();
+            
+            // Calculate impact
+            const saplings = Math.floor(selectedAmount / 50) * 2;
+            const trees = Math.floor(selectedAmount / 500);
+            
+            // Create donation record
+            const donation = {
+                id: donationId,
+                amount: selectedAmount,
+                donor: donorName,
+                date: new Date().toISOString(),
+                saplings: saplings,
+                trees: trees,
+                impact: calculateImpact(selectedAmount)
+            };
+            
+            // Update donation data
+            donationData.totalDonated += selectedAmount;
+            donationData.monthlyProgress += selectedAmount;
+            donationData.treesPlanted += saplings + trees;
+            donationData.impactScore += Math.floor(selectedAmount / 10);
+            donationData.donations.push(donation);
+            
+            // Save to localStorage
+            localStorage.setItem('donationData', JSON.stringify(donationData));
+            
+            // Update display
+            updateStats();
+            updateProgress();
+            
+            // Show success modal
+            showSuccessModal(donation);
+            
+            // Reset selection
+            resetDonationForm();
+        }
+
+        function calculateImpact(amount) {
+            return {
+                co2Offset: Math.floor(amount * 0.5), // kg CO2 offset per rupee
+                biodiversityPoints: Math.floor(amount * 0.1),
+                waterSaved: Math.floor(amount * 2), // liters saved
+                soilRestored: Math.floor(amount * 0.05) // sq meters
+            };
+        }
+
+        function showSuccessModal(donation) {
+            const modal = document.getElementById('successModal');
+            const detailsDiv = document.getElementById('donationDetails');
+            
+            const tierInfo = getTierInfo(donation.amount);
+            
+            detailsDiv.innerHTML = `
+                <div style="margin: 1.5rem 0; padding: 1.5rem; background: rgba(39, 174, 96, 0.1); border-radius: 10px;">
+                    <h3>Donation Details</h3>
+                    <p><strong>Amount:</strong> ₹${donation.amount.toLocaleString()}</p>
+                    <p><strong>Donation ID:</strong> ${donation.id}</p>
+                    <p><strong>Impact:</strong> ${donation.saplings} saplings + ${donation.trees} trees planted</p>
+                    <p><strong>CO2 Offset:</strong> ${donation.impact.co2Offset} kg</p>
+                    <p><strong>Water Saved:</strong> ${donation.impact.waterSaved} liters</p>
+                </div>
+                <div style="margin: 1.5rem 0; padding: 1.5rem; background: rgba(255, 215, 0, 0.1); border-radius: 10px;">
+                    <h3>🏆 Your Rewards</h3>
+                    <p><strong>Tier:</strong> ${tierInfo.name}</p>
+                    <p><strong>Badge:</strong> ${tierInfo.badge}</p>
+                    <p>Check your email for your digital certificate and rewards!</p>
+                </div>
+            `;
+            
+            modal.classList.add('show');
+        }
+
+        function getTierInfo(amount) {
+            if (amount >= 2500) {
+                return { name: 'Planet Protector', badge: '💎 Diamond Badge' };
+            } else if (amount >= 1000) {
+                return { name: 'Eco Champion', badge: '🏆 Gold Badge' };
+            } else if (amount >= 500) {
+                return { name: 'Tree Guardian', badge: '🌳 Silver Badge' };
+            } else {
+                return { name: 'Eco Supporter', badge: '🌱 Bronze Badge' };
+            }
+        }
+
+        function resetDonationForm() {
+            selectedAmount = 0;
+            document.querySelectorAll('.donation-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('customAmount').value = '';
+            const donateButton = document.getElementById('donateButton');
+            donateButton.disabled = true;
+            donateButton.textContent = 'Select an Amount to Donate';
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Tracker - EcoFootprint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .tracker-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .form-input, .form-select {
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.3);
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .activities-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #27ae60;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-details {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .carbon-amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .delete-btn {
+            background: rgba(231, 76, 60, 0.8);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(231, 76, 60, 1);
+        }
+
+        .summary-section {
+            grid-column: span 2;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .daily-total .summary-value {
+            color: #e74c3c;
+        }
+
+        .weekly-avg .summary-value {
+            color: #f39c12;
+        }
+
+        .monthly-total .summary-value {
+            color: #3498db;
+        }
+
+        .eco-status .summary-value {
+            color: #27ae60;
+        }
+
+        .summary-label {
+            font-size: 1rem;
+            color: #cccccc;
+        }
+
+        .tips-section {
+            margin-top: 2rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.1));
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid #27ae60;
+        }
+
+        .tip-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+        }
+
+        .tip-description {
+            color: #cccccc;
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 10px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .clear-btn:hover {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            transform: translateY(-2px);
+        }
+
+        /* Rewards Section Styles */
+        .rewards-section {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.1));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid #27ae60;
+            margin-bottom: 2rem;
+        }
+
+        .points-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .points-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .points-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+
+        .points-label {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .gift-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gift-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 1.5rem;
+            color: #2c3e50;
+            border: 2px solid #27ae60;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+        }
+
+        .gift-card.locked {
+            opacity: 0.6;
+            border-color: #95a5a6;
+        }
+
+        .gift-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .gift-card-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .gift-card-info h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .gift-card-points {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .redeem-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .redeem-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-2px);
+        }
+
+        .redeem-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .eco-action-input {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .eco-action-form {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .eco-action-form .form-group {
+            flex: 1;
+        }
+
+        .points-earned {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            animation: pointsAnimation 0.5s ease-out;
+        }
+
+        @keyframes pointsAnimation {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-notification.show {
+            transform: translateX(0);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .summary-section {
+                grid-column: span 1;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            body {
+                padding: 1rem;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .activities-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .activities-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .activities-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border-radius: 10px;
+        }
+
+        .activities-list::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(39, 174, 96, 0.2);
+            color: #2ecc71;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsive Navigation */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Adjust body padding for fixed navbar */
+        body {
+            padding-top: 100px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🌱 EcoFootprint</a>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        🏠 Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="carbon-tracker.html" class="nav-link active">
+                        📊 Carbon Tracker
+                    </a>
+                </li>
+               
+                
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Carbon Footprint Tracker</h1>
+            <p>Track your daily activities and discover your environmental impact. Get personalized tips to reduce your carbon footprint!</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Activity Input Section -->
+            <div class="tracker-section">
+                <h2 class="section-title">📝 Add Activity</h2>
+                <form class="activity-form" id="activityForm">
+                    <div class="form-group">
+                        <label class="form-label" for="activityType">Activity Type</label>
+                        <select id="activityType" class="form-select" required>
+                            <option value="">Select Activity</option>
+                            <option value="transport">🚗 Transportation</option>
+                            <option value="energy">⚡ Energy Usage</option>
+                            <option value="food">🍽️ Food & Diet</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="waste">🗑️ Waste</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="activityDetail">Activity Details</label>
+                        <select id="activityDetail" class="form-select" required>
+                            <option value="">Choose specific activity</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="activityAmount">Amount/Distance/Duration</label>
+                        <input type="number" id="activityAmount" class="form-input" placeholder="Enter amount" step="0.1" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="activityUnit">Unit</label>
+                        <select id="activityUnit" class="form-select" required>
+                            <option value="">Select unit</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="add-btn">Add Activity</button>
+                </form>
+            </div>
+
+            <!-- Activities List Section -->
+            <div class="tracker-section">
+                <h2 class="section-title">📋 Today's Activities</h2>
+                <div class="activities-list" id="activitiesList">
+                    <p style="text-align: center; color: #cccccc; padding: 2rem;">No activities added yet. Start tracking your carbon footprint!</p>
+                </div>
+                <button class="clear-btn" onclick="clearAllActivities()">Clear All Activities</button>
+            </div>
+        </div>
+
+        <!-- Rewards Section -->
+        <div class="rewards-section">
+            <h2 class="section-title">🎁 EcoRewards - Mamaearth Gift Cards</h2>
+            
+            <!-- Eco Action Input -->
+            <div class="eco-action-input">
+                <h3 style="color: #ffffff; margin-bottom: 1rem;">🌿 Log Your Eco-Friendly Actions</h3>
+                <form class="eco-action-form" id="ecoActionForm">
+                    <div class="form-group">
+                        <label class="form-label" for="ecoAction">What eco-friendly action did you take?</label>
+                        <input type="text" id="ecoAction" class="form-input" placeholder="e.g., I used fan instead of AC, walked instead of driving..." required>
+                    </div>
+                    <button type="submit" class="add-btn" style="height: fit-content;">Earn Points!</button>
+                </form>
+            </div>
+            
+            <!-- Points Display -->
+            <div class="points-display">
+                <div class="points-card">
+                    <div class="points-value" id="totalPoints">0</div>
+                    <div class="points-label">EcoReward Points</div>
+                </div>
+                <div class="points-card">
+                    <div class="points-value" id="monthlyPoints">0</div>
+                    <div class="points-label">This Month</div>
+                </div>
+                <div class="points-card">
+                    <div class="points-value" id="streakDays">0</div>
+                    <div class="points-label">Day Streak</div>
+                </div>
+            </div>
+            
+            <!-- Gift Cards -->
+            <h3 style="color: #ffffff; margin-bottom: 1rem;">🎯 Redeem Mamaearth Gift Cards</h3>
+            <div class="gift-cards">
+                <div class="gift-card" id="giftCard50">
+                    <div class="gift-card-header">
+                        <div class="gift-card-logo">🌿</div>
+                        <div class="gift-card-info">
+                            <h3>Mamaearth Gift Card</h3>
+                            <div class="gift-card-points">₹50 - 100 Points</div>
+                        </div>
+                    </div>
+                    <p>Get ₹50 worth of natural & organic products from Mamaearth!</p>
+                    <button class="redeem-btn" onclick="redeemGiftCard(50, 100)" id="redeem50">Redeem Now</button>
+                </div>
+                
+                <div class="gift-card" id="giftCard100">
+                    <div class="gift-card-header">
+                        <div class="gift-card-logo">🌱</div>
+                        <div class="gift-card-info">
+                            <h3>Mamaearth Gift Card</h3>
+                            <div class="gift-card-points">₹100 - 180 Points</div>
+                        </div>
+                    </div>
+                    <p>Enjoy ₹100 worth of eco-friendly skincare and haircare products!</p>
+                    <button class="redeem-btn" onclick="redeemGiftCard(100, 180)" id="redeem100">Redeem Now</button>
+                </div>
+                
+                <div class="gift-card" id="giftCard250">
+                    <div class="gift-card-header">
+                        <div class="gift-card-logo">🌳</div>
+                        <div class="gift-card-info">
+                            <h3>Mamaearth Gift Card</h3>
+                            <div class="gift-card-points">₹250 - 400 Points</div>
+                        </div>
+                    </div>
+                    <p>Premium gift card for complete natural beauty and baby care products!</p>
+                    <button class="redeem-btn" onclick="redeemGiftCard(250, 400)" id="redeem250">Redeem Now</button>
+                </div>
+                
+                <div class="gift-card" id="giftCard500">
+                    <div class="gift-card-header">
+                        <div class="gift-card-logo">🏆</div>
+                        <div class="gift-card-info">
+                            <h3>Mamaearth Gift Card</h3>
+                            <div class="gift-card-points">₹500 - 750 Points</div>
+                        </div>
+                    </div>
+                    <p>Ultimate eco-warrior reward! Complete Mamaearth product range access!</p>
+                    <button class="redeem-btn" onclick="redeemGiftCard(500, 750)" id="redeem500">Redeem Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <h2 class="section-title">📊 Carbon Footprint Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-card daily-total">
+                    <div class="summary-value" id="dailyTotal">0.0</div>
+                    <div class="summary-label">kg CO₂ Today</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="dailyProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="summary-card weekly-avg">
+                    <div class="summary-value" id="weeklyAvg">0.0</div>
+                    <div class="summary-label">kg CO₂ Weekly Avg</div>
+                </div>
+                <div class="summary-card monthly-total">
+                    <div class="summary-value" id="monthlyTotal">0.0</div>
+                    <div class="summary-label">kg CO₂ This Month</div>
+                </div>
+                <div class="summary-card eco-status">
+                    <div class="summary-value" id="ecoRating">A+</div>
+                    <div class="summary-label">Eco Rating</div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="tips-section">
+                <h3 class="section-title">💡 Personalized Reduction Tips</h3>
+                <div class="tips-grid" id="tipsContainer">
+                    <div class="tip-card">
+                        <div class="tip-title">🚶‍♂️ Walk or Bike More</div>
+                        <div class="tip-description">Replace short car trips with walking or cycling. Even a 2km walk instead of driving can save 0.4kg of CO₂!</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">💡 Use LED Bulbs</div>
+                        <div class="tip-description">Switch to LED lighting to reduce energy consumption by up to 80% compared to traditional bulbs.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">🌱 Eat More Plants</div>
+                        <div class="tip-description">Reduce meat consumption by having one plant-based meal per day. This can save 0.8kg of CO₂ daily!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carbon emission factors (kg CO₂ per unit)
+        const emissionFactors = {
+            transport: {
+                'car-petrol': { factor: 0.21, unit: 'km', name: 'Car (Petrol)' },
+                'car-diesel': { factor: 0.17, unit: 'km', name: 'Car (Diesel)' },
+                'car-electric': { factor: 0.05, unit: 'km', name: 'Car (Electric)' },
+                'bus': { factor: 0.08, unit: 'km', name: 'Bus' },
+                'train': { factor: 0.04, unit: 'km', name: 'Train' },
+                'flight-domestic': { factor: 0.25, unit: 'km', name: 'Flight (Domestic)' },
+                'flight-international': { factor: 0.29, unit: 'km', name: 'Flight (International)' },
+                'motorcycle': { factor: 0.13, unit: 'km', name: 'Motorcycle' },
+                'taxi': { factor: 0.19, unit: 'km', name: 'Taxi/Uber' }
+            },
+            energy: {
+                'electricity': { factor: 0.45, unit: 'kWh', name: 'Electricity Usage' },
+                'heating-gas': { factor: 0.18, unit: 'kWh', name: 'Gas Heating' },
+                'heating-oil': { factor: 0.25, unit: 'liters', name: 'Oil Heating' },
+                'air-conditioning': { factor: 0.55, unit: 'hours', name: 'Air Conditioning' },
+                'washing-machine': { factor: 0.6, unit: 'loads', name: 'Washing Machine' },
+                'dishwasher': { factor: 0.7, unit: 'loads', name: 'Dishwasher' },
+                'dryer': { factor: 2.3, unit: 'loads', name: 'Clothes Dryer' }
+            },
+            food: {
+                'beef': { factor: 27.0, unit: 'kg', name: 'Beef' },
+                'pork': { factor: 12.1, unit: 'kg', name: 'Pork' },
+                'chicken': { factor: 6.9, unit: 'kg', name: 'Chicken' },
+                'fish': { factor: 6.1, unit: 'kg', name: 'Fish' },
+                'dairy': { factor: 3.2, unit: 'kg', name: 'Dairy Products' },
+                'rice': { factor: 4.0, unit: 'kg', name: 'Rice' },
+                'vegetables': { factor: 2.0, unit: 'kg', name: 'Vegetables' },
+                'fruits': { factor: 1.1, unit: 'kg', name: 'Fruits' },
+                'bread': { factor: 0.9, unit: 'kg', name: 'Bread' },
+                'coffee': { factor: 0.02, unit: 'cups', name: 'Coffee' },
+                'fast-food': { factor: 1.5, unit: 'meals', name: 'Fast Food Meal' }
+            },
+            shopping: {
+                'clothing-new': { factor: 8.1, unit: 'items', name: 'New Clothing Item' },
+                'electronics': { factor: 300.0, unit: 'items', name: 'Electronics (Phone/Laptop)' },
+                'books': { factor: 1.2, unit: 'items', name: 'Books' },
+                'furniture': { factor: 85.0, unit: 'items', name: 'Furniture Item' },
+                'online-shopping': { factor: 0.5, unit: 'packages', name: 'Online Package Delivery' },
+                'cosmetics': { factor: 2.3, unit: 'items', name: 'Cosmetics/Beauty Products' }
+            },
+            waste: {
+                'general-waste': { factor: 0.45, unit: 'kg', name: 'General Waste' },
+                'plastic-waste': { factor: 6.0, unit: 'kg', name: 'Plastic Waste' },
+                'paper-waste': { factor: 1.3, unit: 'kg', name: 'Paper Waste' },
+                'food-waste': { factor: 2.5, unit: 'kg', name: 'Food Waste' },
+                'recycling': { factor: -0.2, unit: 'kg', name: 'Recycling' },
+                'composting': { factor: -0.3, unit: 'kg', name: 'Composting' }
+            }
+        };
+
+        // Activity data storage
+        let activities = JSON.parse(localStorage.getItem('carbonActivities')) || [];
+        let monthlyData = JSON.parse(localStorage.getItem('monthlyData')) || {};
+        let ecoPoints = JSON.parse(localStorage.getItem('ecoPoints')) || {
+            total: 0,
+            monthly: 0,
+            streak: 0,
+            lastAction: null,
+            actions: []
+        };
+
+        // Harmful/non-eco actions that should be rejected
+        const harmfulActions = [
+            'truck instead of', 'suv instead of', 'drove instead of', 'flew instead of',
+            'ac instead of fan', 'car instead of', 'motorcycle instead of', 'plane instead of',
+            'drove alone', 'used more energy', 'wasted', 'threw away', 'burned',
+            'plastic instead of', 'disposable instead of', 'fast fashion', 'single use',
+            'meat instead of', 'beef instead of', 'processed food', 'imported food',
+            'gas guzzler', 'fuel inefficient', 'energy waste', 'left lights on'
+        ];
+
+        // Eco-friendly action keywords and points
+        const ecoActions = {
+            // Transportation alternatives
+            'fan instead of ac': { points: 15, message: 'Great choice! Using fans saves 85% energy compared to AC!' },
+            'walked instead of': { points: 20, message: 'Awesome! Walking reduces carbon emissions and improves health!' },
+            'cycled instead of': { points: 20, message: 'Fantastic! Cycling is zero-emission transportation!' },
+            'public transport': { points: 15, message: 'Smart choice! Public transport reduces individual carbon footprint!' },
+            'carpooled': { points: 12, message: 'Excellent! Carpooling cuts emissions by sharing rides!' },
+            'work from home': { points: 25, message: 'Perfect! Remote work eliminates commute emissions!' },
+            
+            // Energy saving
+            'led bulbs': { points: 10, message: 'Brilliant! LED bulbs use 80% less energy!' },
+            'unplugged devices': { points: 8, message: 'Smart! Phantom loads can account for 10% of energy use!' },
+            'solar power': { points: 30, message: 'Outstanding! Solar energy is completely renewable!' },
+            'energy efficient': { points: 12, message: 'Excellent choice for reducing energy consumption!' },
+            
+            // Food choices
+            'plant based': { points: 18, message: 'Amazing! Plant-based meals have 70% lower carbon footprint!' },
+            'vegetarian meal': { points: 15, message: 'Great! Vegetarian meals significantly reduce emissions!' },
+            'local food': { points: 12, message: 'Wonderful! Local food reduces transportation emissions!' },
+            'organic food': { points: 10, message: 'Fantastic! Organic farming is better for the environment!' },
+            'no meat': { points: 15, message: 'Excellent! Reducing meat consumption helps the planet!' },
+            
+            // Waste reduction
+            'recycled': { points: 10, message: 'Perfect! Recycling saves energy and reduces landfill waste!' },
+            'composted': { points: 12, message: 'Great! Composting reduces methane emissions!' },
+            'reused': { points: 8, message: 'Smart! Reusing items prevents unnecessary production!' },
+            'no plastic': { points: 15, message: 'Amazing! Avoiding plastic helps reduce ocean pollution!' },
+            'cloth bags': { points: 8, message: 'Excellent! Reusable bags prevent plastic waste!' },
+            
+            // Water conservation
+            'shorter shower': { points: 8, message: 'Good job! Shorter showers save water and energy!' },
+            'rainwater': { points: 15, message: 'Brilliant! Rainwater harvesting conserves precious water!' },
+            'water efficient': { points: 10, message: 'Smart choice for water conservation!' },
+            
+            // Green choices
+            'planted tree': { points: 25, message: 'Outstanding! Trees absorb CO₂ and produce oxygen!' },
+            'bought eco-friendly': { points: 12, message: 'Great! Eco-friendly products support sustainability!' },
+            'natural products': { points: 10, message: 'Wonderful! Natural products are better for health and environment!' },
+            'second hand': { points: 15, message: 'Excellent! Second-hand shopping reduces manufacturing demand!' }
+        };
+
+        // DOM elements
+        const activityTypeSelect = document.getElementById('activityType');
+        const activityDetailSelect = document.getElementById('activityDetail');
+        const activityAmountInput = document.getElementById('activityAmount');
+        const activityUnitSelect = document.getElementById('activityUnit');
+        const activitiesList = document.getElementById('activitiesList');
+        const activityForm = document.getElementById('activityForm');
+        const ecoActionForm = document.getElementById('ecoActionForm');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateActivityDetails();
+            renderActivities();
+            updateSummary();
+            updateTips();
+            updatePointsDisplay();
+            updateGiftCardAvailability();
+        });
+
+        // Update activity details based on selected type
+        activityTypeSelect.addEventListener('change', updateActivityDetails);
+        activityDetailSelect.addEventListener('change', updateUnit);
+
+        // Handle eco action form submission
+        ecoActionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const actionText = document.getElementById('ecoAction').value.toLowerCase();
+            const pointsEarned = processEcoAction(actionText);
+            
+            if (pointsEarned > 0) {
+                document.getElementById('ecoAction').value = '';
+                updatePointsDisplay();
+                updateGiftCardAvailability();
+                showAchievementNotification(pointsEarned);
+            }
+        });
+
+        function updateActivityDetails() {
+            const selectedType = activityTypeSelect.value;
+            activityDetailSelect.innerHTML = '<option value="">Choose specific activity</option>';
+            activityUnitSelect.innerHTML = '<option value="">Select unit</option>';
+            
+            if (selectedType && emissionFactors[selectedType]) {
+                Object.keys(emissionFactors[selectedType]).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = emissionFactors[selectedType][key].name;
+                    activityDetailSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateUnit() {
+            const selectedType = activityTypeSelect.value;
+            const selectedDetail = activityDetailSelect.value;
+            activityUnitSelect.innerHTML = '<option value="">Select unit</option>';
+            
+            if (selectedType && selectedDetail && emissionFactors[selectedType][selectedDetail]) {
+                const unit = emissionFactors[selectedType][selectedDetail].unit;
+                const option = document.createElement('option');
+                option.value = unit;
+                option.textContent = unit;
+                activityUnitSelect.appendChild(option);
+            }
+        }
+
+        // Handle form submission
+        activityForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = activityTypeSelect.value;
+            const detail = activityDetailSelect.value;
+            const amount = parseFloat(activityAmountInput.value);
+            const unit = activityUnitSelect.value;
+            
+            if (type && detail && amount && unit) {
+                const emissionData = emissionFactors[type][detail];
+                const carbonFootprint = amount * emissionData.factor;
+                
+                const activity = {
+                    id: Date.now(),
+                    type: type,
+                    detail: detail,
+                    name: emissionData.name,
+                    amount: amount,
+                    unit: unit,
+                    carbonFootprint: carbonFootprint,
+                    timestamp: new Date(),
+                    date: new Date().toDateString()
+                };
+                
+                activities.push(activity);
+                saveData();
+                renderActivities();
+                updateSummary();
+                updateTips();
+                activityForm.reset();
+                updateActivityDetails();
+                
+                // Show success message
+                showNotification(`Activity added! Generated ${carbonFootprint.toFixed(2)} kg CO₂`, 'success');
+            }
+        });
+
+        function renderActivities() {
+            const today = new Date().toDateString();
+            const todayActivities = activities.filter(activity => activity.date === today);
+            
+            if (todayActivities.length === 0) {
+                activitiesList.innerHTML = '<p style="text-align: center; color: #cccccc; padding: 2rem;">No activities added yet. Start tracking your carbon footprint!</p>';
+                return;
+            }
+            
+            activitiesList.innerHTML = todayActivities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <div class="activity-name">${activity.name}</div>
+                        <div class="activity-details">${activity.amount} ${activity.unit} • ${new Date(activity.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="carbon-amount">${activity.carbonFootprint.toFixed(2)} kg CO₂</div>
+                        <button class="delete-btn" onclick="deleteActivity(${activity.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteActivity(id) {
+            activities = activities.filter(activity => activity.id !== id);
+            saveData();
+            renderActivities();
+            updateSummary();
+            updateTips();
+            showNotification('Activity deleted!', 'info');
+        }
+
+        function clearAllActivities() {
+            if (confirm('Are you sure you want to clear all today\'s activities?')) {
+                const today = new Date().toDateString();
+                activities = activities.filter(activity => activity.date !== today);
+                saveData();
+                renderActivities();
+                updateSummary();
+                updateTips();
+                showNotification('All activities cleared!', 'info');
+            }
+        }
+
+        function updateSummary() {
+            const today = new Date().toDateString();
+            const thisMonth = new Date().getMonth();
+            const thisYear = new Date().getFullYear();
+            
+            // Calculate daily total
+            const todayActivities = activities.filter(activity => activity.date === today);
+            const dailyTotal = todayActivities.reduce((sum, activity) => sum + activity.carbonFootprint, 0);
+            
+            // Calculate weekly average
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekActivities = activities.filter(activity => new Date(activity.timestamp) >= weekAgo);
+            const weeklyTotal = weekActivities.reduce((sum, activity) => sum + activity.carbonFootprint, 0);
+            const weeklyAvg = weeklyTotal / 7;
+            
+            // Calculate monthly total
+            const monthActivities = activities.filter(activity => {
+                const activityDate = new Date(activity.timestamp);
+                return activityDate.getMonth() === thisMonth && activityDate.getFullYear() === thisYear;
+            });
+            const monthlyTotal = monthActivities.reduce((sum, activity) => sum + activity.carbonFootprint, 0);
+            
+            // Calculate eco rating
+            const ecoRating = calculateEcoRating(dailyTotal);
+            
+            // Update display
+            document.getElementById('dailyTotal').textContent = dailyTotal.toFixed(1);
+            document.getElementById('weeklyAvg').textContent = weeklyAvg.toFixed(1);
+            document.getElementById('monthlyTotal').textContent = monthlyTotal.toFixed(1);
+            document.getElementById('ecoRating').textContent = ecoRating;
+            
+            // Update progress bar (based on daily goal of 20kg)
+            const dailyGoal = 20; // kg CO₂
+            const progressPercentage = Math.min((dailyTotal / dailyGoal) * 100, 100);
+            document.getElementById('dailyProgress').style.width = progressPercentage + '%';
+        }
+
+        function calculateEcoRating(dailyTotal) {
+            if (dailyTotal < 5) return 'A+';
+            if (dailyTotal < 10) return 'A';
+            if (dailyTotal < 15) return 'B';
+            if (dailyTotal < 20) return 'C';
+            if (dailyTotal < 30) return 'D';
+            return 'F';
+        }
+
+        function updateTips() {
+            const today = new Date().toDateString();
+            const todayActivities = activities.filter(activity => activity.date === today);
+            
+            // Analyze activities to provide personalized tips
+            const tips = generatePersonalizedTips(todayActivities);
+            
+            const tipsContainer = document.getElementById('tipsContainer');
+            tipsContainer.innerHTML = tips.map(tip => `
+                <div class="tip-card">
+                    <div class="tip-title">${tip.title}</div>
+                    <div class="tip-description">${tip.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function generatePersonalizedTips(todayActivities) {
+            const tips = [];
+            const activityTypes = {};
+            
+            // Categorize activities
+            todayActivities.forEach(activity => {
+                if (!activityTypes[activity.type]) {
+                    activityTypes[activity.type] = [];
+                }
+                activityTypes[activity.type].push(activity);
+            });
+            
+            // Generate tips based on activities
+            if (activityTypes.transport) {
+                const transportTotal = activityTypes.transport.reduce((sum, a) => sum + a.carbonFootprint, 0);
+                if (transportTotal > 5) {
+                    tips.push({
+                        title: '🚗 Reduce Transportation Emissions',
+                        description: `You generated ${transportTotal.toFixed(1)}kg CO₂ from transport today. Consider carpooling, public transport, or working from home to reduce emissions by up to 50%.`
+                    });
+                }
+            }
+            
+            if (activityTypes.energy) {
+                tips.push({
+                    title: '⚡ Optimize Energy Usage',
+                    description: 'Switch to renewable energy sources, use programmable thermostats, and unplug devices when not in use to reduce energy consumption by 20-30%.'
+                });
+            }
+            
+            if (activityTypes.food) {
+                const meatActivities = activityTypes.food.filter(a => ['beef', 'pork', 'chicken'].includes(a.detail));
+                if (meatActivities.length > 0) {
+                    tips.push({
+                        title: '🌱 Plant-Based Alternatives',
+                        description: 'Try plant-based protein sources 2-3 times per week. Replacing beef with legumes can reduce your food carbon footprint by up to 70%.'
+                    });
+                }
+            }
+            
+            if (activityTypes.shopping) {
+                tips.push({
+                    title: '♻️ Conscious Consumption',
+                    description: 'Buy second-hand items, choose quality over quantity, and support brands with sustainable practices to reduce your shopping carbon footprint.'
+                });
+            }
+            
+            if (activityTypes.waste) {
+                tips.push({
+                    title: '🗂️ Waste Reduction',
+                    description: 'Increase recycling and composting. Every kg of waste recycled instead of thrown away saves approximately 0.7kg of CO₂ emissions.'
+                });
+            }
+            
+            // Add default tips if no specific activities
+            if (tips.length === 0) {
+                tips.push(
+                    {
+                        title: '🚶‍♂️ Walk or Bike More',
+                        description: 'Replace short car trips with walking or cycling. Even a 2km walk instead of driving can save 0.4kg of CO₂!'
+                    },
+                    {
+                        title: '💡 Energy Efficiency',
+                        description: 'Switch to LED bulbs, use smart power strips, and adjust your thermostat by 2°C to reduce energy consumption significantly.'
+                    },
+                    {
+                        title: '🌱 Sustainable Diet',
+                        description: 'Eat more plant-based meals and reduce food waste. Planning meals and using leftovers can reduce food emissions by 30%.'
+                    }
+                );
+            }
+            
+            return tips.slice(0, 6); // Return max 6 tips
+        }
+
+        function saveData() {
+            localStorage.setItem('carbonActivities', JSON.stringify(activities));
+            localStorage.setItem('ecoPoints', JSON.stringify(ecoPoints));
+        }
+
+        // Process eco-friendly actions and award points
+        function processEcoAction(actionText) {
+            // First, check if the action contains any harmful keywords
+            const isHarmful = harmfulActions.some(harmfulKeyword => 
+                actionText.includes(harmfulKeyword)
+            );
+            
+            if (isHarmful) {
+                showNotification('❌ This action doesn\'t seem eco-friendly! Try describing a genuinely sustainable action.', 'error');
+                return 0;
+            }
+            
+            let maxPoints = 0;
+            let bestMatch = null;
+            
+            // Find the best matching eco action
+            for (const [keyword, actionData] of Object.entries(ecoActions)) {
+                if (actionText.includes(keyword)) {
+                    if (actionData.points > maxPoints) {
+                        maxPoints = actionData.points;
+                        bestMatch = actionData;
+                    }
+                }
+            }
+            
+            if (bestMatch) {
+                // Award points
+                ecoPoints.total += maxPoints;
+                ecoPoints.monthly += maxPoints;
+                
+                // Update streak
+                const today = new Date().toDateString();
+                if (ecoPoints.lastAction !== today) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    
+                    if (ecoPoints.lastAction === yesterday.toDateString()) {
+                        ecoPoints.streak += 1;
+                    } else {
+                        ecoPoints.streak = 1;
+                    }
+                    ecoPoints.lastAction = today;
+                }
+                
+                // Log the action
+                ecoPoints.actions.push({
+                    text: actionText,
+                    points: maxPoints,
+                    message: bestMatch.message,
+                    timestamp: new Date(),
+                    date: today
+                });
+                
+                saveData();
+                showNotification(`+${maxPoints} points! ${bestMatch.message}`, 'success');
+                return maxPoints;
+            } else {
+                // Check if the action contains positive eco keywords for generic actions
+                const positiveKeywords = [
+                    'eco', 'green', 'sustainable', 'environment', 'clean', 'natural', 'organic',
+                    'renewable', 'efficient', 'conservation', 'reduce', 'reuse', 'recycle',
+                    'save', 'less', 'alternative', 'plant', 'tree', 'garden', 'local'
+                ];
+                
+                const hasPositiveKeywords = positiveKeywords.some(keyword => 
+                    actionText.includes(keyword)
+                );
+                
+                if (hasPositiveKeywords) {
+                    // Generic eco action (smaller points)
+                    const genericPoints = 5;
+                    ecoPoints.total += genericPoints;
+                    ecoPoints.monthly += genericPoints;
+                    
+                    const today = new Date().toDateString();
+                    ecoPoints.actions.push({
+                        text: actionText,
+                        points: genericPoints,
+                        message: 'Great eco-friendly action! Every small step counts!',
+                        timestamp: new Date(),
+                        date: today
+                    });
+                    
+                    saveData();
+                    showNotification(`+${genericPoints} points! Great eco-friendly action!`, 'success');
+                    return genericPoints;
+                } else {
+                    // Action doesn't seem eco-friendly
+                    showNotification('🤔 Please describe a specific eco-friendly action you took (e.g., "walked instead of driving", "used reusable bags").', 'info');
+                    return 0;
+                }
+            }
+        }
+
+        // Update points display
+        function updatePointsDisplay() {
+            document.getElementById('totalPoints').textContent = ecoPoints.total;
+            document.getElementById('monthlyPoints').textContent = ecoPoints.monthly;
+            document.getElementById('streakDays').textContent = ecoPoints.streak;
+        }
+
+        // Update gift card availability based on points
+        function updateGiftCardAvailability() {
+            const giftCards = [
+                { id: 'giftCard50', button: 'redeem50', points: 100 },
+                { id: 'giftCard100', button: 'redeem100', points: 180 },
+                { id: 'giftCard250', button: 'redeem250', points: 400 },
+                { id: 'giftCard500', button: 'redeem500', points: 750 }
+            ];
+            
+            giftCards.forEach(card => {
+                const cardElement = document.getElementById(card.id);
+                const buttonElement = document.getElementById(card.button);
+                
+                if (ecoPoints.total >= card.points) {
+                    cardElement.classList.remove('locked');
+                    buttonElement.disabled = false;
+                    buttonElement.textContent = 'Redeem Now';
+                } else {
+                    cardElement.classList.add('locked');
+                    buttonElement.disabled = true;
+                    buttonElement.textContent = `Need ${card.points - ecoPoints.total} more points`;
+                }
+            });
+        }
+
+        // Redeem gift card
+        function redeemGiftCard(amount, requiredPoints) {
+            if (ecoPoints.total >= requiredPoints) {
+                if (confirm(`Redeem ₹${amount} Mamaearth Gift Card for ${requiredPoints} points?`)) {
+                    ecoPoints.total -= requiredPoints;
+                    saveData();
+                    updatePointsDisplay();
+                    updateGiftCardAvailability();
+                    
+                    // Show success modal with gift card details
+                    showGiftCardSuccess(amount);
+                }
+            } else {
+                showNotification(`You need ${requiredPoints - ecoPoints.total} more points to redeem this gift card!`, 'error');
+            }
+        }
+
+        // Show gift card success notification
+        function showGiftCardSuccess(amount) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #27ae60, #2ecc71);
+                    padding: 3rem;
+                    border-radius: 20px;
+                    text-align: center;
+                    color: white;
+                    max-width: 500px;
+                    margin: 2rem;
+                ">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                    <h2 style="margin-bottom: 1rem;">Congratulations!</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                        You've successfully redeemed a ₹${amount} Mamaearth Gift Card!
+                    </p>
+                    <div style="
+                        background: rgba(255, 255, 255, 0.2);
+                        padding: 1rem;
+                        border-radius: 10px;
+                        margin-bottom: 2rem;
+                    ">
+                        <strong>Gift Card Code: MAMA${Math.random().toString(36).substring(2, 8).toUpperCase()}</strong>
+                    </div>
+                    <p style="font-size: 0.9rem; margin-bottom: 2rem;">
+                        Use this code at mamaearth.in to purchase natural & organic products!
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: white;
+                        color: #27ae60;
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 10px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    ">Awesome!</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Auto remove after 10 seconds
+            setTimeout(() => {
+                if (document.body.contains(modal)) {
+                    document.body.removeChild(modal);
+                }
+            }, 10000);
+        }
+
+        // Show achievement notification
+        function showAchievementNotification(points) {
+            const notification = document.createElement('div');
+            notification.className = 'achievement-notification';
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">🌟</div>
+                    <div>
+                        <div style="font-weight: bold;">+${points} EcoReward Points!</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9;">Keep up the great work!</div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.textContent = '☰';
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileMenuBtn.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.textContent = '☰';
+            }
+        });
+    </script>
+</body>
+</html>
